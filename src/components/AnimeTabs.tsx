@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const tabs = ["Overview", "Watch", "Reviews"];
 
 interface AnimeTabsProps {
@@ -8,7 +6,7 @@ interface AnimeTabsProps {
 }
 
 const AnimeTabs = ({ activeTab, onTabChange }: AnimeTabsProps) => (
-  <div className="flex border-b border-border">
+  <div className="flex justify-center md:justify-start border-b border-border">
     {tabs.map((tab) => (
       <button
         key={tab}
