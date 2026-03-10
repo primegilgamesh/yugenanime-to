@@ -10,7 +10,7 @@ const navItems = [
 ];
 
 const Sidebar = () => (
-  <aside className="fixed left-0 top-0 h-full w-[70px] bg-sidebar-bg flex flex-col items-center pt-4 z-50 border-r border-border">
+  <aside className="fixed left-0 top-0 h-full w-[70px] bg-sidebar-bg flex-col items-center pt-4 z-50 border-r border-border hidden md:flex">
     <div className="text-primary font-display font-bold text-lg mb-6">Y</div>
     {navItems.map(({ icon: Icon, label }) => (
       <button
