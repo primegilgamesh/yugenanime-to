@@ -3,11 +3,11 @@ import { Home, TrendingUp, Clock, Compass, PlusCircle, X, History, Calendar } fr
 import { Link } from "react-router-dom";
 
 const navItems = [
-  { icon: Home, label: "Home" },
-  { icon: TrendingUp, label: "Trending" },
-  { icon: PlusCircle, label: "" },
-  { icon: Clock, label: "Recents" },
-  { icon: Compass, label: "Discover" },
+  { icon: Home, label: "Home", href: "/" },
+  { icon: TrendingUp, label: "Trending", href: "/trending" },
+  { icon: PlusCircle, label: "", href: null },
+  { icon: Clock, label: "Recents", href: "/recents" },
+  { icon: Compass, label: "Discover", href: "/discover" },
 ];
 
 const trayLinks = [
