@@ -60,22 +60,27 @@ const BottomNav = () => {
         </div>
       </div>
 
-      {/* Bottom Nav Bar */}
       <nav className="fixed bottom-0 left-0 right-0 h-14 bg-card border-t border-border flex items-center justify-around z-[80] md:hidden">
-        {navItems.map(({ icon: Icon, label }, i) => (
-          <button
-            key={i}
-            onClick={i === 2 ? () => setTrayOpen((v) => !v) : undefined}
-            className={`flex flex-col items-center gap-0.5 py-1 px-3 transition-colors ${
-              i === 2
-                ? "text-primary"
-                : "text-sidebar-fg hover:text-foreground"
-            }`}
-          >
-            <Icon size={i === 2 ? 28 : 20} />
-            {label && <span className="text-[10px]">{label}</span>}
-          </button>
-        ))}
+        {navItems.map(({ icon: Icon, label, href }, i) => {
+          const classes = `flex flex-col items-center gap-0.5 py-1 px-3 transition-colors ${
+            i === 2 ? "text-primary" : "text-sidebar-fg hover:text-foreground"
+          }`;
+
+          if (i === 2) {
+            return (
+              <button key={i} onClick={() => setTrayOpen((v) => !v)} className={classes}>
+                <Icon size={28} />
+              </button>
+            );
+          }
+
+          return (
+            <Link key={i} to={href!} className={classes}>
+              <Icon size={20} />
+              {label && <span className="text-[10px]">{label}</span>}
+            </Link>
+          );
+        })}
       </nav>
     </>
   );
