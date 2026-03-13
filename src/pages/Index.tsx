@@ -23,23 +23,18 @@ const Index = () => {
         <HeroBanner />
         <AnimeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Mobile info section - shows between tabs and main content */}
         <div className="py-4">
           <MobileAnimeInfo />
         </div>
 
         <div className="flex gap-6 p-4 md:p-6">
-          {/* Left info sidebar - desktop only */}
           <div className="w-64 flex-shrink-0 hidden lg:block">
             <AnimeInfoSidebar />
           </div>
-          {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
             {activeTab === "Overview" && (
               <>
-                {/* Mobile description */}
                 <MobileDescription />
-                {/* Desktop synopsis */}
                 <div className="hidden md:block space-y-2">
                   <h3 className="text-foreground font-display font-semibold text-base">Synopsis</h3>
                   <p className="text-secondary-foreground text-sm leading-relaxed">
@@ -47,10 +42,7 @@ const Index = () => {
                     himself, the priest Heiter, the dwarf warrior Eisen, and the elven mage Frieren—forge bonds
                     through adventures and battles, creating unforgettable precious memories. However, the
                     millennia-old Frieren struggles to understand the human concept of time, and before she knows it,
-                    her companions begin to pass away one by one. When Himmel dies, Frieren is struck by grief and
-                    regret, realizing that she barely knew anything about those she calls friends. Determined to
-                    understand humanity better, Frieren embarks on a new journey, retracing the steps of their
-                    original quest while seeking out new companions along the way.
+                    her companions begin to pass away one by one.
                   </p>
                 </div>
                 <StatusDistribution />
