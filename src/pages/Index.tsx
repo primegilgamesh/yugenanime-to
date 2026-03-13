@@ -26,7 +26,7 @@ const Index = () => {
       <BottomNav />
       <div className="md:ml-[70px]">
         <TopBar />
-        <HeroBanner title={title} score={anime?.score} />
+        <HeroBanner />
         <AnimeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
         <div className="py-4">
