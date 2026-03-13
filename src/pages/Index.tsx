@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
