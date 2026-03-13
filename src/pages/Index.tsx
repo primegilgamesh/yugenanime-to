@@ -10,14 +10,9 @@ import MobileDescription from "@/components/MobileDescription";
 import StatusDistribution from "@/components/StatusDistribution";
 import EpisodeGrid from "@/components/EpisodeGrid";
 import ReviewsSection from "@/components/ReviewsSection";
-import { allAnime } from "@/data/animeData";
 
 const Index = () => {
-  const { slug } = useParams<{ slug: string }>();
   const [activeTab, setActiveTab] = useState("Overview");
-
-  const anime = allAnime.find((a) => a.slug === slug);
-  const title = anime?.title ?? slug?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? "Anime";
 
   return (
     <div className="min-h-screen bg-background pb-14 md:pb-0">
