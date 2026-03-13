@@ -38,9 +38,11 @@ const Index = () => {
                 <div className="hidden md:block space-y-2">
                   <h3 className="text-foreground font-display font-semibold text-base">Synopsis</h3>
                   <p className="text-secondary-foreground text-sm leading-relaxed">
-                    The story of {title} follows the adventures and journeys of its protagonists through
-                    a world filled with challenges, friendships, and unforgettable moments. Through trials
-                    and triumphs, the characters grow and discover what truly matters in life.
+                    During their decade-long quest to defeat the Demon King, the members of the hero's party—Himmel
+                    himself, the priest Heiter, the dwarf warrior Eisen, and the elven mage Frieren—forge bonds
+                    through adventures and battles, creating unforgettable precious memories. However, the
+                    millennia-old Frieren struggles to understand the human concept of time, and before she knows it,
+                    her companions begin to pass away one by one.
                   </p>
                 </div>
                 <StatusDistribution />
