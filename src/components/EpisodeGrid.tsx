@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const episodes = [
   { num: 1, title: "The Journey's End", views: "172K", time: "7 months ago" },
   { num: 2, title: "It Didn't Have to Be Magic...", views: "47.3K", time: "7 months ago" },
@@ -29,41 +31,53 @@ const episodes = [
   { num: 28, title: "Sousou no Frieren", views: "21.4K", time: "about a month ago" },
 ];
 
-const EpisodeGrid = () => (
-  <div>
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-foreground font-display font-semibold text-base">Watch</h3>
-      <div className="flex items-center gap-3">
-        <span className="text-primary text-xs cursor-pointer hover:underline">Sort by ▾</span>
+const EpisodeGrid = () => {
+  const [filter, setFilter] = useState("");
+
+  const filteredEpisodes = filter
+    ? episodes.filter((ep) => ep.num.toString().includes(filter))
+    : episodes;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-foreground font-display font-semibold text-base">Watch</h3>
         <input
           placeholder="Jump to episode..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
           className="bg-secondary text-xs text-foreground placeholder:text-muted-foreground px-3 py-1.5 rounded-md outline-none w-36"
         />
       </div>
-    </div>
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-      {episodes.map((ep) => (
-        <div key={ep.num} className="group cursor-pointer">
-          <div className="relative bg-secondary rounded-md overflow-hidden aspect-video mb-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-muted/30 flex items-center justify-center">
-              <span className="text-muted-foreground text-2xl font-display font-bold opacity-30">
-                {ep.num}
-              </span>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {filteredEpisodes.map((ep) => (
+          <div key={ep.num} className="group cursor-pointer">
+            <div className="relative bg-secondary rounded-md overflow-hidden aspect-video mb-2">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-muted/30 flex items-center justify-center">
+                <span className="text-muted-foreground text-2xl font-display font-bold opacity-30">
+                  {ep.num}
+                </span>
+              </div>
+              <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[10px] px-1.5 py-0.5 rounded">
+                24:00
+              </div>
             </div>
-            <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[10px] px-1.5 py-0.5 rounded">
-              24:00
+            <div className="text-foreground text-xs font-medium group-hover:text-primary transition-colors leading-tight">
+              {ep.num} : {ep.title}
+            </div>
+            <div className="text-muted-foreground text-[10px] mt-0.5">
+              {ep.views} views · {ep.time}
             </div>
           </div>
-          <div className="text-foreground text-xs font-medium group-hover:text-primary transition-colors leading-tight">
-            {ep.num} : {ep.title}
+        ))}
+        {filteredEpisodes.length === 0 && (
+          <div className="col-span-full text-muted-foreground text-sm text-center py-8">
+            No episodes found
           </div>
-          <div className="text-muted-foreground text-[10px] mt-0.5">
-            {ep.views} views · {ep.time}
-          </div>
-        </div>
-      ))}
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default EpisodeGrid;

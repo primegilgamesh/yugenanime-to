@@ -2,14 +2,6 @@ import { useState } from "react";
 import { Home, TrendingUp, Clock, Compass, PlusCircle, X, History, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const navItems = [
-  { icon: Home, label: "Home" },
-  { icon: TrendingUp, label: "Trending" },
-  { icon: PlusCircle, label: "" },
-  { icon: Clock, label: "Recents" },
-  { icon: Compass, label: "Discover" },
-];
-
 const trayLinks = [
   { icon: History, label: "History", href: "/history" },
   { icon: Calendar, label: "Schedule", href: "/schedule" },
@@ -20,7 +12,6 @@ const BottomNav = () => {
 
   return (
     <>
-      {/* Overlay */}
       {trayOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-[60] md:hidden"
@@ -28,7 +19,6 @@ const BottomNav = () => {
         />
       )}
 
-      {/* Navigation Tray */}
       <div
         className={`fixed left-0 right-0 bottom-14 z-[70] md:hidden transition-transform duration-300 ${
           trayOpen ? "translate-y-0" : "translate-y-full"
@@ -60,22 +50,29 @@ const BottomNav = () => {
         </div>
       </div>
 
-      {/* Bottom Nav Bar */}
       <nav className="fixed bottom-0 left-0 right-0 h-14 bg-card border-t border-border flex items-center justify-around z-[80] md:hidden">
-        {navItems.map(({ icon: Icon, label }, i) => (
-          <button
-            key={i}
-            onClick={i === 2 ? () => setTrayOpen((v) => !v) : undefined}
-            className={`flex flex-col items-center gap-0.5 py-1 px-3 transition-colors ${
-              i === 2
-                ? "text-primary"
-                : "text-sidebar-fg hover:text-foreground"
-            }`}
-          >
-            <Icon size={i === 2 ? 28 : 20} />
-            {label && <span className="text-[10px]">{label}</span>}
-          </button>
-        ))}
+        <Link to="/" className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
+          <Home size={20} />
+          <span className="text-[10px]">Home</span>
+        </Link>
+        <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
+          <TrendingUp size={20} />
+          <span className="text-[10px]">Trending</span>
+        </button>
+        <button
+          onClick={() => setTrayOpen((v) => !v)}
+          className="flex flex-col items-center gap-0.5 py-1 px-3 text-primary transition-colors"
+        >
+          <PlusCircle size={28} />
+        </button>
+        <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
+          <Clock size={20} />
+          <span className="text-[10px]">Recents</span>
+        </button>
+        <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
+          <Compass size={20} />
+          <span className="text-[10px]">Discover</span>
+        </button>
       </nav>
     </>
   );
