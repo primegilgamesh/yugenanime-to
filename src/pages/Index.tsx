@@ -30,7 +30,7 @@ const Index = () => {
         <AnimeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
         <div className="py-4">
-          <MobileAnimeInfo title={title} />
+          <MobileAnimeInfo />
         </div>
 
         <div className="flex gap-6 p-4 md:p-6">
