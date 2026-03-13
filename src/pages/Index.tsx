@@ -35,7 +35,7 @@ const Index = () => {
 
         <div className="flex gap-6 p-4 md:p-6">
           <div className="w-64 flex-shrink-0 hidden lg:block">
-            <AnimeInfoSidebar title={title} />
+            <AnimeInfoSidebar />
           </div>
           <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
             {activeTab === "Overview" && (
