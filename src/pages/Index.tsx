@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
@@ -10,9 +11,14 @@ import MobileDescription from "@/components/MobileDescription";
 import StatusDistribution from "@/components/StatusDistribution";
 import EpisodeGrid from "@/components/EpisodeGrid";
 import ReviewsSection from "@/components/ReviewsSection";
+import { allAnime } from "@/data/animeData";
 
 const Index = () => {
+  const { slug } = useParams<{ slug: string }>();
   const [activeTab, setActiveTab] = useState("Overview");
+
+  const anime = allAnime.find((a) => a.slug === slug);
+  const title = anime?.title ?? slug?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? "Anime";
 
   return (
     <div className="min-h-screen bg-background pb-14 md:pb-0">
@@ -20,37 +26,27 @@ const Index = () => {
       <BottomNav />
       <div className="md:ml-[70px]">
         <TopBar />
-        <HeroBanner />
+        <HeroBanner title={title} score={anime?.score} />
         <AnimeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Mobile info section - shows between tabs and main content */}
         <div className="py-4">
-          <MobileAnimeInfo />
+          <MobileAnimeInfo title={title} />
         </div>
 
         <div className="flex gap-6 p-4 md:p-6">
-          {/* Left info sidebar - desktop only */}
           <div className="w-64 flex-shrink-0 hidden lg:block">
-            <AnimeInfoSidebar />
+            <AnimeInfoSidebar title={title} />
           </div>
-          {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
             {activeTab === "Overview" && (
               <>
-                {/* Mobile description */}
                 <MobileDescription />
-                {/* Desktop synopsis */}
                 <div className="hidden md:block space-y-2">
                   <h3 className="text-foreground font-display font-semibold text-base">Synopsis</h3>
                   <p className="text-secondary-foreground text-sm leading-relaxed">
-                    During their decade-long quest to defeat the Demon King, the members of the hero's party—Himmel
-                    himself, the priest Heiter, the dwarf warrior Eisen, and the elven mage Frieren—forge bonds
-                    through adventures and battles, creating unforgettable precious memories. However, the
-                    millennia-old Frieren struggles to understand the human concept of time, and before she knows it,
-                    her companions begin to pass away one by one. When Himmel dies, Frieren is struck by grief and
-                    regret, realizing that she barely knew anything about those she calls friends. Determined to
-                    understand humanity better, Frieren embarks on a new journey, retracing the steps of their
-                    original quest while seeking out new companions along the way.
+                    The story of {title} follows the adventures and journeys of its protagonists through
+                    a world filled with challenges, friendships, and unforgettable moments. Through trials
+                    and triumphs, the characters grow and discover what truly matters in life.
                   </p>
                 </div>
                 <StatusDistribution />
