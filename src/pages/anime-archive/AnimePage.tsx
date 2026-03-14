@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
-import HeroBanner from "@/components/HeroBanner";
 import AnimeTabs from "@/components/AnimeTabs";
 import AnimeInfoSidebar from "@/components/AnimeInfoSidebar";
 import MobileAnimeInfo from "@/components/MobileAnimeInfo";
@@ -10,9 +10,22 @@ import MobileDescription from "@/components/MobileDescription";
 import StatusDistribution from "@/components/StatusDistribution";
 import EpisodeGrid from "@/components/EpisodeGrid";
 import ReviewsSection from "@/components/ReviewsSection";
+import AnimeHeroBanner from "@/components/AnimeHeroBanner";
+import { allAnime } from "@/data/animeData";
 
-const Index = () => {
+const AnimePage = () => {
+  const { slug } = useParams<{ slug: string }>();
   const [activeTab, setActiveTab] = useState("Overview");
+
+  const anime = allAnime.find((a) => a.slug === slug);
+
+  if (!anime) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-foreground text-lg">Anime not found</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background pb-14 md:pb-0">
@@ -20,35 +33,31 @@ const Index = () => {
       <BottomNav />
       <div className="md:ml-[70px]">
         <TopBar />
-        <HeroBanner />
+        <AnimeHeroBanner anime={anime} />
         <AnimeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
         <div className="py-4">
-          <MobileAnimeInfo />
+          <MobileAnimeInfo anime={anime} />
         </div>
 
         <div className="flex gap-6 p-4 md:p-6">
           <div className="w-64 flex-shrink-0 hidden lg:block">
-            <AnimeInfoSidebar />
+            <AnimeInfoSidebar anime={anime} />
           </div>
           <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
             {activeTab === "Overview" && (
               <>
-                <MobileDescription />
+                <MobileDescription synopsis={anime.synopsis || ""} />
                 <div className="hidden md:block space-y-2">
                   <h3 className="text-foreground font-display font-semibold text-base">Synopsis</h3>
                   <p className="text-secondary-foreground text-sm leading-relaxed">
-                    During their decade-long quest to defeat the Demon King, the members of the hero's party—Himmel
-                    himself, the priest Heiter, the dwarf warrior Eisen, and the elven mage Frieren—forge bonds
-                    through adventures and battles, creating unforgettable precious memories. However, the
-                    millennia-old Frieren struggles to understand the human concept of time, and before she knows it,
-                    her companions begin to pass away one by one.
+                    {anime.synopsis}
                   </p>
                 </div>
                 <StatusDistribution />
               </>
             )}
-            {activeTab === "Watch" && <EpisodeGrid />}
+            {activeTab === "Watch" && <EpisodeGrid episodes={anime.episodes || 12} title={anime.title} />}
             {activeTab === "Reviews" && <ReviewsSection />}
           </div>
         </div>
@@ -57,4 +66,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default AnimePage;
