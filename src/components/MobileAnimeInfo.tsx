@@ -1,27 +1,39 @@
-import { Star } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { AnimeEntry } from "@/data/animeData";
 
-const infoColumns = [
-  { label: "Romaji", value: "Frieren: Beyond Journey's End" },
-  { label: "Native", value: "葬送のフリーレン" },
-  { label: "Syno", value: "Frieren at the Funeral" },
-];
+interface Props {
+  anime: AnimeEntry;
+}
 
-const MobileAnimeInfo = () => {
+const MobileAnimeInfo = ({ anime }: Props) => {
   const isLoggedIn = false;
 
   const handleWriteReview = () => {
     if (!isLoggedIn) {
-      toast.error("Please login first to write a review");
+      toast("Please login first to write a review", {
+        style: { background: "hsla(30, 90%, 50%, 0.85)", color: "white", border: "none" },
+        position: "top-right",
+      });
       return;
     }
   };
+
+  const infoColumns = [
+    { label: "Romaji", value: anime.titleEnglish || anime.title },
+    { label: "Native", value: anime.titleNative || "—" },
+    { label: "Synonyms", value: anime.synonyms || "—" },
+  ];
 
   return (
     <div className="md:hidden px-4 space-y-3">
       <div className="flex items-center gap-2">
         <Star size={16} className="text-score-star" fill="currentColor" />
-        <span className="text-foreground text-sm">9.17 Average Score</span>
+        <span className="text-foreground text-sm">{anime.score?.toFixed(2) || "—"} Average Score</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Heart size={16} className="text-heart" fill="currentColor" />
+        <span className="text-foreground text-sm">{anime.favorites?.toLocaleString() || "—"} Favorites</span>
       </div>
       <div className="border-t border-border pt-3">
         <div className="grid grid-cols-3 gap-2">
