@@ -1,13 +1,14 @@
 import { Star, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   anime: AnimeEntry;
 }
 
 const AnimeInfoSidebar = ({ anime }: Props) => {
-  const isLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
   const handleWriteReview = () => {
     if (!isLoggedIn) {
