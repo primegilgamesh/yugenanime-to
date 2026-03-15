@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   anime: AnimeEntry;
@@ -9,7 +10,7 @@ interface Props {
 
 const AnimeHeroBanner = ({ anime }: Props) => {
   const [isFavorited, setIsFavorited] = useState(false);
-  const isLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
   const handleAuthAction = (action: string) => {
     if (!isLoggedIn) {

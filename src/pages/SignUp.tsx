@@ -1,25 +1,78 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Mail, Lock, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { useAuth, validateUsername, validateEmail, validatePassword } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeat, setRepeat] = useState("");
+  const { signup } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!username || !email || !password || !repeat) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    const ue = validateUsername(username);
+    if (ue) { toast.error(ue); return; }
+    const ee = validateEmail(email);
+    if (ee) { toast.error(ee); return; }
+    const pe = validatePassword(password);
+    if (pe) { toast.error(pe); return; }
+    if (password !== repeat) { toast.error("Passwords do not match"); return; }
+
+    const result = signup(username, email, password);
+    if (result.success) {
+      toast.success("Account created! Welcome!");
+      navigate("/");
+    } else {
+      toast.error(result.error);
+    }
   };
+
+  const formContent = (mobile?: boolean) => (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className={`flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-2`}>
+        <User size={16} className="text-gray-400" />
+        <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent" />
+      </div>
+      <div className={`flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-2`}>
+        <Mail size={16} className="text-gray-400" />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent" />
+      </div>
+      <div className="flex gap-2">
+        <div className={`flex-1 flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-1`}>
+          <Lock size={14} className="text-gray-400 flex-shrink-0" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="flex-1 outline-none text-xs text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
+        </div>
+        <div className={`flex-1 flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-1`}>
+          <Lock size={14} className="text-gray-400 flex-shrink-0" />
+          <input type="password" placeholder="Repeat" value={repeat} onChange={(e) => setRepeat(e.target.value)} className="flex-1 outline-none text-xs text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
+        </div>
+      </div>
+      <p className="text-gray-400 text-[10px]">Username: 3-20 chars, letters/numbers/underscores · Password: 6+ chars, 1 uppercase, 1 number</p>
+      <div className="flex items-center justify-between pt-2">
+        <p className="text-gray-500 text-sm">Already have an account? <Link to="/signin" className="text-emerald-500 font-medium">Sign In</Link></p>
+        <button type="submit" className="bg-emerald-500 text-white font-semibold text-sm px-5 py-2 rounded-md hover:bg-emerald-600 transition">Sign Up</button>
+      </div>
+    </form>
+  );
 
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400" />
       <div className="absolute top-[10%] left-[5%] w-16 h-16 bg-white/10 rounded-lg rotate-12 animate-pulse" />
-      <div className="absolute top-[60%] left-[8%] w-10 h-10 bg-white/10 rounded-md -rotate-6" />
       <div className="absolute top-[40%] right-[15%] w-24 h-24 bg-white/10 rounded-2xl rotate-45" />
       <div className="absolute bottom-[15%] right-[10%] w-32 h-32 bg-white/10 rounded-2xl -rotate-12" />
-      <div className="absolute bottom-[30%] left-[20%] w-6 h-6 bg-white/15 rounded-full" />
+
+      <Link to="/" className="absolute top-4 left-4 z-20 bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors">
+        <ArrowLeft size={20} className="text-white" />
+      </Link>
 
       {/* Desktop */}
       <div className="hidden md:flex items-center justify-center min-h-screen relative z-10">
@@ -27,30 +80,7 @@ const SignUp = () => {
           <h1 className="font-display text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
             <span className="text-emerald-500">✦</span> YugenAnime
           </h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex items-center border border-gray-200 rounded-lg px-3 py-2.5 gap-2">
-              <User size={16} className="text-gray-400" />
-              <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-            </div>
-            <div className="flex items-center border border-gray-200 rounded-lg px-3 py-2.5 gap-2">
-              <Mail size={16} className="text-gray-400" />
-              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-            </div>
-            <div className="flex gap-3">
-              <div className="flex-1 flex items-center border border-gray-200 rounded-lg px-3 py-2.5 gap-2">
-                <Lock size={16} className="text-gray-400" />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-              </div>
-              <div className="flex-1 flex items-center border border-gray-200 rounded-lg px-3 py-2.5 gap-2">
-                <Lock size={16} className="text-gray-400" />
-                <input type="password" placeholder="Repeat" value={repeat} onChange={(e) => setRepeat(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-              </div>
-            </div>
-            <div className="flex items-center justify-between pt-2">
-              <p className="text-gray-500 text-sm">Already have an account? <Link to="/signin" className="text-emerald-500 font-medium">Sign In</Link></p>
-              <button type="submit" className="bg-emerald-500 text-white font-semibold text-sm px-5 py-2 rounded-md hover:bg-emerald-600 transition">Sign Up</button>
-            </div>
-          </form>
+          {formContent()}
         </div>
       </div>
 
@@ -61,34 +91,7 @@ const SignUp = () => {
           <h1 className="font-display text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
             <span className="text-emerald-500">✦</span> YugenAnime
           </h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex items-center border border-gray-200 rounded-lg px-3 py-3 gap-2">
-              <User size={16} className="text-gray-400" />
-              <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-            </div>
-            <div className="flex items-center border border-gray-200 rounded-lg px-3 py-3 gap-2">
-              <Mail size={16} className="text-gray-400" />
-              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-            </div>
-            <div className="flex gap-3">
-              <div className="flex-1 flex items-center border border-gray-200 rounded-lg px-3 py-3 gap-2">
-                <Lock size={16} className="text-gray-400" />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-              </div>
-              <div className="flex-1 flex items-center border border-gray-200 rounded-lg px-3 py-3 gap-2">
-                <Lock size={16} className="text-gray-400" />
-                <input type="password" placeholder="Repeat" value={repeat} onChange={(e) => setRepeat(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400" />
-              </div>
-            </div>
-            <div className="flex items-center justify-between pt-2">
-              <p className="text-gray-500 text-sm">Already have an account? <Link to="/signin" className="text-emerald-500 font-medium">Sign In</Link></p>
-              <button type="submit" className="bg-emerald-500 text-white font-semibold text-sm px-5 py-2 rounded-md hover:bg-emerald-600 transition">Sign Up</button>
-            </div>
-          </form>
-        </div>
-        <div className="h-[25vh] bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 relative">
-          <div className="absolute top-4 left-[10%] w-20 h-20 bg-white/10 rounded-2xl rotate-12" />
-          <div className="absolute bottom-8 right-[10%] w-28 h-28 bg-white/10 rounded-2xl -rotate-6" />
+          {formContent(true)}
         </div>
       </div>
     </div>

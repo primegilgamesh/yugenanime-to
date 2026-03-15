@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, TouchEvent } from "react";
 import { Link } from "react-router-dom";
 import { Clock, TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Languages, ThumbsUp } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
@@ -14,6 +14,7 @@ import {
   newOnYugen,
   mostPopular,
   getGradient,
+  allAnime,
 } from "@/data/animeData";
 
 const tabs = ["All", "SUB", "CHINESE"] as const;
@@ -27,16 +28,52 @@ const reviews = [
   { anime: "I've Got a Million Skill Points!", user: "NightShade587", quote: "Some descriptions, I should be clear, the anime is alright because it currently has no description.", time: "2 days ago", likes: 1, gradient: 3 },
 ];
 
+// Extend heroPicks to 7 slides
+const heroSlides = [
+  ...heroPicks,
+  ...allAnime.filter((a) => !heroPicks.find((h) => h.slug === a.slug)).slice(0, 4),
+].slice(0, 7);
+
 const Home = () => {
   const [activeTab, setActiveTab] = useState<string>("All");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroPicks.length);
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleTouchStart = (e: TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchMove = (e: TouchEvent) => { touchEndX.current = e.touches[0].clientX; };
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      setCurrentSlide((p) => diff > 0 ? (p + 1) % heroSlides.length : (p - 1 + heroSlides.length) % heroSlides.length);
+    }
+  };
+
+  const AnimePortraitCard = ({ anime, i }: { anime: typeof trendingAiring[0]; i: number }) => (
+    <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
+      <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-[3/4]`}>
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+        {anime.dubbed && <div className="absolute bottom-1.5 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded"><Languages size={10} /> Dub</div>}
+        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
+          <p className="text-foreground text-xs font-semibold leading-tight truncate">{anime.title}</p>
+        </div>
+      </div>
+      <div className="mt-1.5">
+        <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{anime.title}</p>
+        <div className="flex items-center gap-2 mt-0.5">
+          {anime.season && <span className="text-muted-foreground text-[10px]">{anime.season}</span>}
+          {anime.score && <span className="flex items-center gap-0.5 text-score-star text-[10px]"><Star size={9} fill="currentColor" /> {anime.score.toFixed(2)}</span>}
+        </div>
+      </div>
+    </Link>
+  );
 
   return (
     <div className="min-h-screen bg-background pb-14 md:pb-0">
@@ -45,11 +82,16 @@ const Home = () => {
       <div className="md:ml-[70px]">
         <TopBar />
 
-        {/* Hero - Editor's Pick Slideshow */}
-        <div className="relative w-full h-[200px] md:h-[300px] overflow-hidden">
-          {heroPicks.map((pick, i) => (
+        {/* Hero Slideshow */}
+        <div
+          className="relative w-full h-[200px] md:h-[300px] overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {heroSlides.map((pick, i) => (
             <Link
-              key={pick.slug}
+              key={pick.slug + i}
               to={`/anime/${pick.slug}`}
               className={`absolute inset-0 transition-opacity duration-700 ${i === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
             >
@@ -69,42 +111,53 @@ const Home = () => {
               </div>
             </Link>
           ))}
-          {/* Slide controls */}
-          <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8 z-20 flex items-center gap-2">
-            <button onClick={() => setCurrentSlide((p) => (p - 1 + heroPicks.length) % heroPicks.length)} className="bg-background/50 text-foreground p-1 rounded-full hover:bg-background/80 transition"><ChevronLeft size={16} /></button>
-            <span className="text-foreground text-xs">{currentSlide + 1}/{heroPicks.length}</span>
-            <button onClick={() => setCurrentSlide((p) => (p + 1) % heroPicks.length)} className="bg-background/50 text-foreground p-1 rounded-full hover:bg-background/80 transition"><ChevronRight size={16} /></button>
+
+          {/* Desktop translucent arrow buttons */}
+          <button
+            onClick={() => setCurrentSlide((p) => (p - 1 + heroSlides.length) % heroSlides.length)}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full transition"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={() => setCurrentSlide((p) => (p + 1) % heroSlides.length)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full transition"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          {/* Slide indicators */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`w-2 h-2 rounded-full transition-all ${i === currentSlide ? "bg-primary w-4" : "bg-white/40 hover:bg-white/60"}`}
+              />
+            ))}
           </div>
         </div>
 
         <div className="px-4 md:px-6 py-4 space-y-8">
-          {/* Recently Released - Episode cards */}
+          {/* Recently Released - 5 per row */}
           <section>
             <SectionHeader icon={Clock} title="Recently Released" />
             <div className="flex gap-2 mb-3">
               {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`text-[11px] font-semibold px-3 py-1 rounded-md transition-colors ${
-                    activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                  }`}
-                >
+                <button key={tab} onClick={() => setActiveTab(tab)} className={`text-[11px] font-semibold px-3 py-1 rounded-md transition-colors ${activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
                   {tab}
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
-              {recentlyReleased.map((anime, i) => (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {recentlyReleased.slice(0, 10).map((anime, i) => (
                 <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
                   <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-video`}>
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                     <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
                       EP {anime.episodes}
                     </div>
-                    <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">
-                      24:00
-                    </div>
+                    <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">24:00</div>
                   </div>
                   <div className="mt-1.5">
                     <p className="text-foreground text-[11px] font-medium leading-tight group-hover:text-primary transition-colors">{i + 1} · {anime.title}</p>
@@ -116,147 +169,61 @@ const Home = () => {
             </div>
           </section>
 
-          {/* Trending Airing Series */}
+          {/* Trending Airing - 6 per row */}
           <section>
             <SectionHeader icon={TrendingUp} title="Trending Airing Series" iconColor="text-primary" />
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {trendingAiring.map((anime, i) => (
-                <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
-                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-[3/4]`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                      <p className="text-foreground text-xs font-semibold leading-tight truncate">{anime.title}</p>
-                    </div>
-                  </div>
-                  <div className="mt-1.5">
-                    <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{anime.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {anime.season && <span className="text-muted-foreground text-[10px]">{anime.season}</span>}
-                      {anime.score && <span className="flex items-center gap-0.5 text-score-star text-[10px]"><Star size={9} fill="currentColor" /> {anime.score.toFixed(2)}</span>}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              {trendingAiring.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i} />)}
             </div>
           </section>
 
-          {/* Editor's Pick */}
+          {/* Editor's Pick - 6 per row */}
           <section>
             <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
             <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Five of our favourite series of all times</p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {editorsPick.map((anime, i) => (
-                <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
-                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i + 6)} aspect-[3/4]`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    {anime.dubbed && <div className="absolute bottom-1.5 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded"><Languages size={10} /> Dub</div>}
-                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                      <p className="text-foreground text-xs font-semibold leading-tight truncate">{anime.title}</p>
-                    </div>
-                  </div>
-                  <div className="mt-1.5">
-                    <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{anime.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {anime.season && <span className="text-muted-foreground text-[10px]">{anime.season}</span>}
-                      {anime.score && <span className="flex items-center gap-0.5 text-score-star text-[10px]"><Star size={9} fill="currentColor" /> {anime.score.toFixed(2)}</span>}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
             </div>
           </section>
 
-          {/* Underrated Series */}
+          {/* Underrated - 6 per row */}
           <section>
             <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
             <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Great anime that never quite got the attention they deserve</p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {underratedSeries.map((anime, i) => (
-                <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
-                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i + 3)} aspect-[3/4]`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                      <p className="text-foreground text-xs font-semibold leading-tight truncate">{anime.title}</p>
-                    </div>
-                  </div>
-                  <div className="mt-1.5">
-                    <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{anime.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {anime.season && <span className="text-muted-foreground text-[10px]">{anime.season}</span>}
-                      {anime.score && <span className="flex items-center gap-0.5 text-score-star text-[10px]"><Star size={9} fill="currentColor" /> {anime.score.toFixed(2)}</span>}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
             </div>
           </section>
 
-          {/* New on YugenAnime */}
+          {/* New on YugenAnime - 6 per row */}
           <section>
             <SectionHeader icon={Plus} title="New on YugenAnime" iconColor="text-primary" />
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {newOnYugen.map((anime, i) => (
-                <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
-                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i + 9)} aspect-[3/4]`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                      <p className="text-foreground text-xs font-semibold leading-tight truncate">{anime.title}</p>
-                    </div>
-                  </div>
-                  <div className="mt-1.5">
-                    <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{anime.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {anime.season && <span className="text-muted-foreground text-[10px]">{anime.season}</span>}
-                      {anime.score && <span className="flex items-center gap-0.5 text-score-star text-[10px]"><Star size={9} fill="currentColor" /> {anime.score.toFixed(2)}</span>}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              {newOnYugen.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 9} />)}
             </div>
           </section>
 
-          {/* Most Popular Series */}
+          {/* Most Popular - 6 per row */}
           <section>
             <SectionHeader icon={Flame} title="Most Popular Series" iconColor="text-score-star" />
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {mostPopular.map((anime, i) => (
-                <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
-                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-[3/4]`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    {anime.dubbed && <div className="absolute bottom-1.5 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded"><Languages size={10} /> Available in Dub</div>}
-                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                      <p className="text-foreground text-xs font-semibold leading-tight truncate">{anime.title}</p>
-                    </div>
-                  </div>
-                  <div className="mt-1.5">
-                    <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{anime.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {anime.season && <span className="text-muted-foreground text-[10px]">{anime.season}</span>}
-                      {anime.score && <span className="flex items-center gap-0.5 text-score-star text-[10px]"><Star size={9} fill="currentColor" /> {anime.score.toFixed(2)}</span>}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              {mostPopular.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i} />)}
             </div>
           </section>
 
-          {/* Recent Reviews */}
+          {/* Recent Reviews - 4 per row desktop */}
           <section>
             <SectionHeader icon={MessageSquareText} title="Recent YugenAnime Reviews" iconColor="text-primary" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               {reviews.map((review, i) => (
                 <div key={i} className="bg-card border border-border rounded-lg overflow-hidden">
                   <div className={`w-full h-28 bg-gradient-to-br ${getGradient(review.gradient)}`} />
                   <div className="p-3">
-                    <p className="text-primary text-[11px] font-medium">
-                      Review of {review.anime} by {review.user}
-                    </p>
+                    <p className="text-primary text-[11px] font-medium">Review of {review.anime} by {review.user}</p>
                     <p className="text-secondary-foreground text-xs italic mt-1">"{review.quote}"</p>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-muted-foreground text-[10px]">{review.time}</span>
-                      <span className="text-muted-foreground text-[10px] flex items-center gap-1">
-                        <ThumbsUp size={10} /> {review.likes}
-                      </span>
+                      <span className="text-muted-foreground text-[10px] flex items-center gap-1"><ThumbsUp size={10} /> {review.likes}</span>
                     </div>
                   </div>
                 </div>
