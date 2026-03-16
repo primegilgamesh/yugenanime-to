@@ -21,7 +21,7 @@ const MobileAnimeInfo = ({ anime }: Props) => {
   };
 
   const infoColumns = [
-    { label: "Romaji", value: anime.titleEnglish || anime.title },
+    { label: "Romaji", value: anime.titleRomaji || anime.titleEnglish || anime.title },
     { label: "Native", value: anime.titleNative || "—" },
     { label: "Synonyms", value: anime.synonyms || "—" },
   ];
@@ -46,6 +46,17 @@ const MobileAnimeInfo = ({ anime }: Props) => {
           ))}
         </div>
       </div>
+      {/* Genres */}
+      {anime.genres && (
+        <div className="border-t border-border pt-3 space-y-1">
+          <div className="text-primary text-xs font-medium">Genres</div>
+          <div className="flex flex-wrap gap-1">
+            {anime.genres.split(", ").map((g) => (
+              <span key={g} className="bg-secondary text-foreground text-[10px] px-2 py-0.5 rounded">{g}</span>
+            ))}
+          </div>
+        </div>
+      )}
       <button
         onClick={handleWriteReview}
         className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"

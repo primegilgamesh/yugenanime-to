@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Home from "./pages/Home";
 import AnimePage from "./pages/anime-archive/AnimePage";
+import EpisodePlayerPage from "./pages/anime-archive/EpisodePlayerPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Trending from "./pages/Trending";
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/anime/:slug" element={<AnimePage />} />
+            <Route path="/anime/:slug/watch/:episode" element={<EpisodePlayerPage />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/trending" element={<Trending />} />

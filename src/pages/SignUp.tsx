@@ -36,28 +36,27 @@ const SignUp = () => {
   };
 
   const formContent = (mobile?: boolean) => (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div className={`flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-2`}>
-        <User size={16} className="text-gray-400" />
-        <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent" />
+        <User size={14} className="text-gray-400 flex-shrink-0" />
+        <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
       </div>
       <div className={`flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-2`}>
-        <Mail size={16} className="text-gray-400" />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent" />
+        <Mail size={14} className="text-gray-400 flex-shrink-0" />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
       </div>
       <div className="flex gap-2">
-        <div className={`flex-1 flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-1`}>
-          <Lock size={14} className="text-gray-400 flex-shrink-0" />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="flex-1 outline-none text-xs text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
+        <div className={`flex-1 flex items-center border border-gray-200 rounded-lg px-2 ${mobile ? "py-3" : "py-2.5"} gap-1 min-w-0`}>
+          <Lock size={12} className="text-gray-400 flex-shrink-0" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="flex-1 outline-none text-[11px] text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
         </div>
-        <div className={`flex-1 flex items-center border border-gray-200 rounded-lg px-3 ${mobile ? "py-3" : "py-2.5"} gap-1`}>
-          <Lock size={14} className="text-gray-400 flex-shrink-0" />
-          <input type="password" placeholder="Repeat" value={repeat} onChange={(e) => setRepeat(e.target.value)} className="flex-1 outline-none text-xs text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
+        <div className={`flex-1 flex items-center border border-gray-200 rounded-lg px-2 ${mobile ? "py-3" : "py-2.5"} gap-1 min-w-0`}>
+          <Lock size={12} className="text-gray-400 flex-shrink-0" />
+          <input type="password" placeholder="Repeat" value={repeat} onChange={(e) => setRepeat(e.target.value)} className="flex-1 outline-none text-[11px] text-gray-700 placeholder:text-gray-400 bg-transparent min-w-0" />
         </div>
       </div>
-      <p className="text-gray-400 text-[10px]">Username: 3-20 chars, letters/numbers/underscores · Password: 6+ chars, 1 uppercase, 1 number</p>
-      <div className="flex items-center justify-between pt-2">
-        <p className="text-gray-500 text-sm">Already have an account? <Link to="/signin" className="text-emerald-500 font-medium">Sign In</Link></p>
+      <div className="flex items-center justify-between pt-1">
+        <p className="text-gray-500 text-xs">Already have an account? <Link to="/signin" className="text-emerald-500 font-medium">Sign In</Link></p>
         <button type="submit" className="bg-emerald-500 text-white font-semibold text-sm px-5 py-2 rounded-md hover:bg-emerald-600 transition">Sign Up</button>
       </div>
     </form>
@@ -77,7 +76,7 @@ const SignUp = () => {
       {/* Desktop */}
       <div className="hidden md:flex items-center justify-center min-h-screen relative z-10">
         <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-sm">
-          <h1 className="font-display text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <h1 className="font-display text-2xl font-bold text-gray-800 mb-5 flex items-center gap-2">
             <span className="text-emerald-500">✦</span> YugenAnime
           </h1>
           {formContent()}
@@ -88,7 +87,7 @@ const SignUp = () => {
       <div className="md:hidden flex flex-col min-h-screen relative z-10">
         <div className="h-[35vh]" />
         <div className="flex-1 bg-white rounded-t-3xl px-6 pt-8 pb-6">
-          <h1 className="font-display text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <h1 className="font-display text-2xl font-bold text-gray-800 mb-5 flex items-center gap-2">
             <span className="text-emerald-500">✦</span> YugenAnime
           </h1>
           {formContent(true)}
