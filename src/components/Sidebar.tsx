@@ -30,8 +30,8 @@ const Sidebar = () => {
           </Link>
         ))}
         <button
-          onClick={() => setScheduleOpen(true)}
-          className="flex flex-col items-center gap-1 py-3 px-2 w-full text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover transition-colors"
+          onClick={() => setScheduleOpen((v) => !v)}
+          className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${scheduleOpen ? "text-foreground bg-sidebar-hover" : "text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover"}`}
         >
           <Calendar size={20} />
           <span className="text-[10px]">Schedule</span>
@@ -44,16 +44,20 @@ const Sidebar = () => {
         )}
       </aside>
 
+      {/* Desktop schedule panel attached to sidebar */}
       {scheduleOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60" onClick={() => setScheduleOpen(false)}>
-          <div className="bg-card rounded-xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto mx-4" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-foreground font-display font-bold text-lg">Release Schedule</h2>
-              <button onClick={() => setScheduleOpen(false)} className="text-muted-foreground hover:text-foreground"><X size={20} /></button>
+        <>
+          <div className="fixed inset-0 z-[45] hidden md:block" onClick={() => setScheduleOpen(false)} />
+          <div className="fixed left-[70px] top-0 h-full w-80 z-[55] bg-card border-r border-border shadow-xl overflow-y-auto hidden md:block">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-foreground font-display font-bold text-lg">Release Schedule</h2>
+                <button onClick={() => setScheduleOpen(false)} className="text-muted-foreground hover:text-foreground"><X size={20} /></button>
+              </div>
+              <ScheduleModal />
             </div>
-            <ScheduleModal />
           </div>
-        </div>
+        </>
       )}
     </>
   );

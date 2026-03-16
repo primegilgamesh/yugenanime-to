@@ -11,6 +11,7 @@ import StatusDistribution from "@/components/StatusDistribution";
 import EpisodeGrid from "@/components/EpisodeGrid";
 import ReviewsSection from "@/components/ReviewsSection";
 import AnimeHeroBanner from "@/components/AnimeHeroBanner";
+import TrailerSection from "@/components/TrailerSection";
 import { allAnime } from "@/data/animeData";
 
 const AnimePage = () => {
@@ -54,10 +55,18 @@ const AnimePage = () => {
                     {anime.synopsis}
                   </p>
                 </div>
+                <TrailerSection trailerUrl={anime.trailerUrl} />
                 <StatusDistribution />
               </>
             )}
-            {activeTab === "Watch" && <EpisodeGrid episodes={anime.episodes || 12} title={anime.title} />}
+            {activeTab === "Watch" && (
+              <EpisodeGrid
+                episodes={anime.episodes || 12}
+                title={anime.title}
+                slug={anime.slug}
+                episodeList={anime.episodeList}
+              />
+            )}
             {activeTab === "Reviews" && <ReviewsSection />}
           </div>
         </div>
