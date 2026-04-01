@@ -19,7 +19,7 @@ interface Props {
   episodeList?: EpisodeInfo[];
 }
 
-const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", episodeList }: Props) => {
+const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slug = "", episodeList }: Props) => {
   const [filter, setFilter] = useState("");
   const [activePage, setActivePage] = useState(0);
 
@@ -67,24 +67,6 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", 
         />
       </div>
 
-      {totalPages > 1 && !isFiltering && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setActivePage(i)}
-              className={`text-xs px-3 py-1.5 rounded-md font-medium transition-colors ${
-                activePage === i
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {getPageLabel(i)}
-            </button>
-          ))}
-        </div>
-      )}
-
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
         {displayedEpisodes.map((ep) => (
           <Link
@@ -120,6 +102,24 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", 
           <div className="col-span-full text-muted-foreground text-sm text-center py-8">No episodes found</div>
         )}
       </div>
+
+      {totalPages > 1 && !isFiltering && (
+        <div className="flex flex-wrap justify-center gap-2 mt-5">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setActivePage(i)}
+              className={`text-xs px-3 py-1.5 rounded-md font-medium transition-colors ${
+                activePage === i
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {getPageLabel(i)}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
