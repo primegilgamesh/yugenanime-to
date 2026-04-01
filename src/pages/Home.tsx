@@ -151,7 +151,7 @@ const Home = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {recentlyReleased.slice(0, 10).map((anime, i) => (
-                <Link to={`/anime/${anime.slug}`} key={anime.slug} className="group block">
+                <Link to={`/anime/${anime.slug}/watch/${anime.episodes || 1}`} key={anime.slug} className="group block">
                   <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-video`}>
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                     <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">

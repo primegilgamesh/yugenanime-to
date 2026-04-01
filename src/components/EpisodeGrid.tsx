@@ -51,7 +51,7 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", 
           className="bg-secondary text-xs text-foreground placeholder:text-muted-foreground px-3 py-1.5 rounded-md outline-none w-36"
         />
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
         {filteredEpisodes.map((ep) => (
           <Link
             to={`/anime/${slug}/watch/${ep.num}`}
