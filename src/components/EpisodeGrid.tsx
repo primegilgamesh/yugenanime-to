@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { AlertTriangle, RotateCcw, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { AlertTriangle, RotateCcw, Star } from "lucide-react";
 import { EpisodeInfo } from "@/data/animeData";
 
 const EPISODES_PER_PAGE = 48;
