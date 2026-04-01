@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { EpisodeInfo } from "@/data/animeData";
 
+const EPISODES_PER_PAGE = 28;
+
 const defaultEpisodeNames: Record<number, string> = {
   1: "The Journey's End", 2: "It Didn't Have to Be Magic...", 3: "Killing Magic",
   4: "The Land Where Souls Rest", 5: "Phantoms of the Dead", 6: "The Hero of the Village",
@@ -19,6 +21,7 @@ interface Props {
 
 const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", episodeList }: Props) => {
   const [filter, setFilter] = useState("");
+  const [activePage, setActivePage] = useState(0);
 
   const episodes = episodeList
     ? episodeList.map((ep) => ({
@@ -36,9 +39,21 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", 
         type: "normal" as const,
       }));
 
-  const filteredEpisodes = filter
+  const isFiltering = filter.length > 0;
+  const filteredEpisodes = isFiltering
     ? episodes.filter((ep) => ep.num.toString().includes(filter))
     : episodes;
+
+  const totalPages = Math.ceil(episodes.length / EPISODES_PER_PAGE);
+  const displayedEpisodes = isFiltering
+    ? filteredEpisodes
+    : filteredEpisodes.slice(activePage * EPISODES_PER_PAGE, (activePage + 1) * EPISODES_PER_PAGE);
+
+  const getPageLabel = (pageIndex: number) => {
+    const start = pageIndex * EPISODES_PER_PAGE + 1;
+    const end = Math.min((pageIndex + 1) * EPISODES_PER_PAGE, episodes.length);
+    return `${start}-${end}`;
+  };
 
   return (
     <div>
@@ -51,8 +66,27 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", 
           className="bg-secondary text-xs text-foreground placeholder:text-muted-foreground px-3 py-1.5 rounded-md outline-none w-36"
         />
       </div>
+
+      {totalPages > 1 && !isFiltering && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setActivePage(i)}
+              className={`text-xs px-3 py-1.5 rounded-md font-medium transition-colors ${
+                activePage === i
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {getPageLabel(i)}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
-        {filteredEpisodes.map((ep) => (
+        {displayedEpisodes.map((ep) => (
           <Link
             to={`/anime/${slug}/watch/${ep.num}`}
             key={ep.num}
@@ -82,7 +116,7 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title = "Anime", slug = "", 
             </div>
           </Link>
         ))}
-        {filteredEpisodes.length === 0 && (
+        {displayedEpisodes.length === 0 && (
           <div className="col-span-full text-muted-foreground text-sm text-center py-8">No episodes found</div>
         )}
       </div>
