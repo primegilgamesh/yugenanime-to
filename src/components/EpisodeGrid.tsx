@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { AlertTriangle, RotateCcw } from "lucide-react";
+import { AlertTriangle, RotateCcw, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { EpisodeInfo } from "@/data/animeData";
 
-const EPISODES_PER_PAGE = 28;
+const EPISODES_PER_PAGE = 48;
 
 const defaultEpisodeNames: Record<number, string> = {
   1: "The Journey's End", 2: "It Didn't Have to Be Magic...", 3: "Killing Magic",
@@ -22,6 +22,7 @@ interface Props {
 const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slug = "", episodeList }: Props) => {
   const [filter, setFilter] = useState("");
   const [activePage, setActivePage] = useState(0);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const episodes = episodeList
     ? episodeList.map((ep) => ({
@@ -39,26 +40,85 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slu
         type: "normal" as const,
       }));
 
+  const sortedEpisodes = sortOrder === "desc" ? [...episodes].reverse() : episodes;
+
   const isFiltering = filter.length > 0;
   const filteredEpisodes = isFiltering
-    ? episodes.filter((ep) => ep.num.toString().includes(filter))
-    : episodes;
+    ? sortedEpisodes.filter((ep) => ep.num.toString().includes(filter))
+    : sortedEpisodes;
 
-  const totalPages = Math.ceil(episodes.length / EPISODES_PER_PAGE);
+  const totalPages = Math.ceil(sortedEpisodes.length / EPISODES_PER_PAGE);
   const displayedEpisodes = isFiltering
     ? filteredEpisodes
     : filteredEpisodes.slice(activePage * EPISODES_PER_PAGE, (activePage + 1) * EPISODES_PER_PAGE);
 
-  const getPageLabel = (pageIndex: number) => {
-    const start = pageIndex * EPISODES_PER_PAGE + 1;
-    const end = Math.min((pageIndex + 1) * EPISODES_PER_PAGE, episodes.length);
-    return `${start}-${end}`;
+  const renderPagination = () => {
+    if (totalPages <= 1 || isFiltering) return null;
+
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 5) {
+      for (let i = 0; i < totalPages; i++) pages.push(i);
+    } else {
+      pages.push(0);
+      if (activePage > 2) pages.push("...");
+      const start = Math.max(1, activePage - 1);
+      const end = Math.min(totalPages - 2, activePage + 1);
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (activePage < totalPages - 3) pages.push("...");
+      pages.push(totalPages - 1);
+    }
+
+    return (
+      <div className="flex items-center justify-center gap-1.5 mt-6">
+        <button
+          onClick={() => setActivePage(Math.max(0, activePage - 1))}
+          disabled={activePage === 0}
+          className="text-xs px-2.5 py-1.5 rounded-md font-medium transition-colors text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Previous
+        </button>
+        {pages.map((p, i) =>
+          p === "..." ? (
+            <span key={`dots-${i}`} className="text-muted-foreground text-xs px-1">...</span>
+          ) : (
+            <button
+              key={p}
+              onClick={() => setActivePage(p as number)}
+              className={`text-xs w-7 h-7 rounded-md font-medium transition-colors ${
+                activePage === p
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              }`}
+            >
+              {(p as number) + 1}
+            </button>
+          )
+        )}
+        <button
+          onClick={() => setActivePage(Math.min(totalPages - 1, activePage + 1))}
+          disabled={activePage === totalPages - 1}
+          className="text-xs px-2.5 py-1.5 rounded-md font-medium transition-colors text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Next
+        </button>
+      </div>
+    );
   };
 
   return (
     <div>
+      {/* Header with Sort and Jump to episode */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-foreground font-display font-semibold text-base">Watch</h3>
+        <div className="flex items-center gap-3">
+          <h3 className="text-foreground font-display font-semibold text-base">Watch</h3>
+          <button
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors bg-secondary px-2.5 py-1.5 rounded-md"
+          >
+            Sort by <Star size={10} className="text-score-star" fill="currentColor" />
+            {sortOrder === "desc" && <span>↓</span>}
+          </button>
+        </div>
         <input
           placeholder="Jump to episode..."
           value={filter}
@@ -67,14 +127,15 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slu
         />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
+      {/* Episode Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {displayedEpisodes.map((ep) => (
           <Link
             to={`/anime/${slug}/watch/${ep.num}`}
             key={ep.num}
             className="group cursor-pointer block"
           >
-            <div className="relative bg-secondary rounded-md overflow-hidden aspect-video mb-2">
+            <div className="relative bg-secondary rounded-md overflow-hidden aspect-video mb-1.5">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-muted/30 flex items-center justify-center">
                 <span className="text-muted-foreground text-2xl font-display font-bold opacity-30">{ep.num}</span>
               </div>
@@ -90,8 +151,8 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slu
                 </div>
               )}
             </div>
-            <div className="text-foreground text-xs font-medium group-hover:text-primary transition-colors leading-tight">
-              {ep.num}: {ep.title}
+            <div className="text-foreground text-[11px] font-medium group-hover:text-primary transition-colors leading-tight line-clamp-2">
+              {ep.num} : {ep.title}
             </div>
             <div className="text-muted-foreground text-[10px] mt-0.5">
               {ep.views} views · {ep.time}
@@ -103,23 +164,8 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slu
         )}
       </div>
 
-      {totalPages > 1 && !isFiltering && (
-        <div className="flex flex-wrap justify-center gap-2 mt-5">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setActivePage(i)}
-              className={`text-xs px-3 py-1.5 rounded-md font-medium transition-colors ${
-                activePage === i
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {getPageLabel(i)}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Pagination */}
+      {renderPagination()}
     </div>
   );
 };
