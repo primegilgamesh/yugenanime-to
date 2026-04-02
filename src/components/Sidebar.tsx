@@ -11,7 +11,7 @@ const Sidebar = () => {
   const navItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: TrendingUp, label: "Trending", href: "/trending" },
-    { icon: Clock, label: "Recents", href: "/" },
+    { icon: Clock, label: "Recents", href: "/recents" },
     { icon: Compass, label: "Discover", href: "/" },
     { icon: History, label: "History", href: "/" },
   ];

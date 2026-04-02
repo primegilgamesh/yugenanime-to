@@ -44,10 +44,10 @@ const BottomNav = () => {
         <button onClick={() => setTrayOpen((v) => !v)} className="flex flex-col items-center gap-0.5 py-1 px-3 text-primary transition-colors">
           <PlusCircle size={28} />
         </button>
-        <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
+        <Link to="/recents" className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
           <Clock size={20} />
           <span className="text-[10px]">Recents</span>
-        </button>
+        </Link>
         <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-sidebar-fg hover:text-foreground transition-colors">
           <Compass size={20} />
           <span className="text-[10px]">Discover</span>
