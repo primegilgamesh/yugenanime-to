@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AlertTriangle, RotateCcw, Star } from "lucide-react";
 import { EpisodeInfo } from "@/data/animeData";
 
-const EPISODES_PER_PAGE = 48;
+const EPISODES_PER_PAGE = 28;
 
 const defaultEpisodeNames: Record<number, string> = {
   1: "The Journey's End", 2: "It Didn't Have to Be Magic...", 3: "Killing Magic",
