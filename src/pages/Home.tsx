@@ -95,18 +95,26 @@ const Home = () => {
               to={`/anime/${pick.slug}`}
               className={`absolute inset-0 transition-opacity duration-700 ${i === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
             >
-              {/* Blurred background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${pick.cover}`} />
-              <div className="absolute inset-0 backdrop-blur-sm bg-black/30" />
-              
-              {/* Right side: tilted anime image */}
-              <div className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 w-[120px] h-[160px] md:w-[180px] md:h-[250px] z-10">
-                <div className={`w-full h-full rounded-lg bg-gradient-to-br ${pick.cover} shadow-2xl border-2 border-white/20 transform rotate-3`} />
+              {/* Left side: blurred background */}
+              <div className="absolute inset-0">
+                <div className={`absolute inset-0 bg-gradient-to-br ${pick.cover}`} />
+                <div className="absolute inset-0 backdrop-blur-md bg-black/40" />
               </div>
 
+              {/* Right side: clear anime image */}
+              <div className="absolute right-0 top-0 bottom-0 w-[45%] md:w-[40%]">
+                <div className={`w-full h-full bg-gradient-to-br ${pick.cover}`} />
+              </div>
+
+              {/* Diagonal white line separator */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                clipPath: 'polygon(52% 0%, 55% 0%, 45% 100%, 42% 100%)',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%)'
+              }} />
+
               {/* Left side: text content */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-[160px] md:bottom-8 md:left-8 md:right-[240px]">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 right-[45%] md:bottom-8 md:left-8 md:right-[45%]">
                 <span className="text-primary text-[10px] font-bold uppercase tracking-wider">#{i + 1} Spotlight</span>
                 <h2 className="font-display text-lg md:text-3xl font-bold text-foreground mt-1 line-clamp-2">{pick.title}</h2>
                 <p className="text-secondary-foreground text-xs md:text-sm mt-1 max-w-md leading-relaxed hidden md:block">
