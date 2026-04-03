@@ -197,31 +197,39 @@ const Home = () => {
             </div>
           </section>
 
-          {/* Editor's Pick - 6 per row */}
-          <section className="relative overflow-hidden rounded-lg bg-card border border-border p-4 md:p-6">
-            <div className="absolute bottom-0 right-0 w-32 h-32 md:w-48 md:h-48 overflow-hidden pointer-events-none">
-              <div className="absolute bottom-0 right-0 w-[200%] h-[200%] bg-primary/20 rotate-45 translate-x-[30%] translate-y-[30%]" />
-              <div className={`absolute bottom-2 right-2 w-16 h-20 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(6)} shadow-lg border border-border`} />
+          {/* Editor's Pick + Underrated - joined sections */}
+          <div className="relative overflow-hidden rounded-lg bg-card border border-border">
+            {/* Editor's Pick section */}
+            <div className="relative p-4 md:p-6 pb-6">
+              {/* Top-right corner embedded image */}
+              <div className="absolute top-0 right-0 w-28 h-28 md:w-40 md:h-40 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 right-0 w-[200%] h-[200%] bg-primary/10 -rotate-45 -translate-x-[30%] -translate-y-[30%]" />
+                <div className={`absolute top-2 right-2 w-14 h-18 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(6)} shadow-lg border border-border`} />
+              </div>
+              <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
+              <p className="text-muted-foreground text-[11px] mb-3 -mt-2">This is our favorite picks of all time</p>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
+                {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
+              </div>
             </div>
-            <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
-            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">This is our favorite picks of all time</p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
-              {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
-            </div>
-          </section>
 
-          {/* Underrated - 6 per row */}
-          <section className="relative overflow-hidden rounded-lg bg-card border border-border p-4 md:p-6">
-            <div className="absolute bottom-0 right-0 w-32 h-32 md:w-48 md:h-48 overflow-hidden pointer-events-none">
-              <div className="absolute bottom-0 right-0 w-[200%] h-[200%] bg-primary/20 rotate-45 translate-x-[30%] translate-y-[30%]" />
-              <div className={`absolute bottom-2 right-2 w-16 h-20 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(3)} shadow-lg border border-border`} />
+            {/* Divider */}
+            <div className="border-t border-border" />
+
+            {/* Underrated section */}
+            <div className="relative p-4 md:p-6 pt-6">
+              {/* Bottom-left corner embedded image */}
+              <div className="absolute bottom-0 left-0 w-28 h-28 md:w-40 md:h-40 overflow-hidden pointer-events-none">
+                <div className="absolute bottom-0 left-0 w-[200%] h-[200%] bg-primary/10 -rotate-45 translate-x-[-30%] translate-y-[30%]" />
+                <div className={`absolute bottom-2 left-2 w-14 h-18 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(3)} shadow-lg border border-border`} />
+              </div>
+              <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
+              <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Real gems that should get the attention they deserve</p>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
+                {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
+              </div>
             </div>
-            <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
-            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Real gems that should get the attention they deserve</p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
-              {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
-            </div>
-          </section>
+          </div>
 
           {/* New on YugenAnime - 6 per row */}
           <section>
