@@ -81,7 +81,7 @@ const TopBar = () => {
         </div>
       ) : (
         <>
-          <Link to="/" className="text-primary font-display font-bold text-base mr-4">✦ YugenAnime</Link>
+          <Link to="/" className="text-foreground font-display font-bold text-base mr-4">✦ YugenAnime</Link>
           <div className="flex-1 max-w-md hidden md:block">{searchBar}</div>
           <div className="ml-auto flex items-center gap-3">
             <button className="md:hidden text-muted-foreground hover:text-foreground transition-colors" onClick={() => setSearchOpen(true)}><Search size={18} /></button>
@@ -107,7 +107,7 @@ const TopBar = () => {
       )}
       {searchOpen && (
         <div className="hidden md:contents">
-          <Link to="/" className="text-primary font-display font-bold text-base mr-4">✦ YugenAnime</Link>
+          <Link to="/" className="text-foreground font-display font-bold text-base mr-4">✦ YugenAnime</Link>
           <div className="flex-1 max-w-md">{searchBar}</div>
           <div className="ml-auto flex items-center gap-3">
             <a href="https://discord.gg/lovable-dev" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">

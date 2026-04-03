@@ -24,7 +24,14 @@ const MobileAnimeInfo = ({ anime }: Props) => {
     { label: "Romaji", value: anime.titleRomaji || anime.titleEnglish || anime.title },
     { label: "Native", value: anime.titleNative || "—" },
     { label: "Synonyms", value: anime.synonyms || "—" },
-    ...(anime.genres ? [{ label: "Genres", value: anime.genres }] : []),
+    { label: "Format", value: anime.format || "TV" },
+    { label: "Studios", value: anime.studios || "—" },
+    { label: "Episodes", value: String(anime.episodes || "—") },
+    ...(anime.episodesDub ? [{ label: "Episodes (Dub)", value: String(anime.episodesDub) }] : []),
+    { label: "Status", value: anime.status || "—" },
+    { label: "Premiered", value: anime.premiered || anime.season || "—" },
+    { label: "Genres", value: anime.genres || "—" },
+    { label: "External Links", value: "MAL · AniList · SIMKL" },
   ];
 
   return (

@@ -95,17 +95,29 @@ const Home = () => {
               to={`/anime/${pick.slug}`}
               className={`absolute inset-0 transition-opacity duration-700 ${i === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
             >
+              {/* Blurred background */}
               <div className={`absolute inset-0 bg-gradient-to-br ${pick.cover}`} />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8">
-                <span className="text-primary text-[10px] font-bold uppercase tracking-wider">Editor&apos;s Pick</span>
-                <h2 className="font-display text-xl md:text-3xl font-bold text-foreground mt-1">{pick.title}</h2>
+              <div className="absolute inset-0 backdrop-blur-sm bg-black/30" />
+              
+              {/* Right side: tilted anime image */}
+              <div className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 w-[120px] h-[160px] md:w-[180px] md:h-[250px] z-10">
+                <div className={`w-full h-full rounded-lg bg-gradient-to-br ${pick.cover} shadow-2xl border-2 border-white/20 transform rotate-3`} />
+              </div>
+
+              {/* Left side: text content */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-[160px] md:bottom-8 md:left-8 md:right-[240px]">
+                <span className="text-primary text-[10px] font-bold uppercase tracking-wider">#{i + 1} Spotlight</span>
+                <h2 className="font-display text-lg md:text-3xl font-bold text-foreground mt-1 line-clamp-2">{pick.title}</h2>
                 <p className="text-secondary-foreground text-xs md:text-sm mt-1 max-w-md leading-relaxed hidden md:block">
                   {pick.synopsis?.slice(0, 160)}...
                 </p>
                 <div className="flex items-center gap-2 mt-3">
                   <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-md flex items-center gap-1">
                     <Play size={12} /> Watch Now
+                  </span>
+                  <span className="text-foreground text-xs font-medium flex items-center gap-1 opacity-80">
+                    <Play size={12} /> View Details
                   </span>
                 </div>
               </div>
@@ -178,19 +190,27 @@ const Home = () => {
           </section>
 
           {/* Editor's Pick - 6 per row */}
-          <section>
+          <section className="relative overflow-hidden rounded-lg bg-card border border-border p-4 md:p-6">
+            <div className="absolute bottom-0 right-0 w-32 h-32 md:w-48 md:h-48 overflow-hidden pointer-events-none">
+              <div className="absolute bottom-0 right-0 w-[200%] h-[200%] bg-primary/20 rotate-45 translate-x-[30%] translate-y-[30%]" />
+              <div className={`absolute bottom-2 right-2 w-16 h-20 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(6)} shadow-lg border border-border`} />
+            </div>
             <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
-            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Five of our favourite series of all times</p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">This is our favorite picks of all time</p>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
               {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
             </div>
           </section>
 
           {/* Underrated - 6 per row */}
-          <section>
+          <section className="relative overflow-hidden rounded-lg bg-card border border-border p-4 md:p-6">
+            <div className="absolute bottom-0 right-0 w-32 h-32 md:w-48 md:h-48 overflow-hidden pointer-events-none">
+              <div className="absolute bottom-0 right-0 w-[200%] h-[200%] bg-primary/20 rotate-45 translate-x-[30%] translate-y-[30%]" />
+              <div className={`absolute bottom-2 right-2 w-16 h-20 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(3)} shadow-lg border border-border`} />
+            </div>
             <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
-            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Great anime that never quite got the attention they deserve</p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Real gems that should get the attention they deserve</p>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
               {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
             </div>
           </section>
