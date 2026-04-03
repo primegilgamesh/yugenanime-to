@@ -95,18 +95,26 @@ const Home = () => {
               to={`/anime/${pick.slug}`}
               className={`absolute inset-0 transition-opacity duration-700 ${i === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
             >
-              {/* Blurred background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${pick.cover}`} />
-              <div className="absolute inset-0 backdrop-blur-sm bg-black/30" />
-              
-              {/* Right side: tilted anime image */}
-              <div className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 w-[120px] h-[160px] md:w-[180px] md:h-[250px] z-10">
-                <div className={`w-full h-full rounded-lg bg-gradient-to-br ${pick.cover} shadow-2xl border-2 border-white/20 transform rotate-3`} />
+              {/* Left side: blurred background */}
+              <div className="absolute inset-0">
+                <div className={`absolute inset-0 bg-gradient-to-br ${pick.cover}`} />
+                <div className="absolute inset-0 backdrop-blur-md bg-black/40" />
               </div>
 
+              {/* Right side: clear anime image */}
+              <div className="absolute right-0 top-0 bottom-0 w-[45%] md:w-[40%]">
+                <div className={`w-full h-full bg-gradient-to-br ${pick.cover}`} />
+              </div>
+
+              {/* Diagonal white line separator */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                clipPath: 'polygon(52% 0%, 55% 0%, 45% 100%, 42% 100%)',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%)'
+              }} />
+
               {/* Left side: text content */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-[160px] md:bottom-8 md:left-8 md:right-[240px]">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 right-[45%] md:bottom-8 md:left-8 md:right-[45%]">
                 <span className="text-primary text-[10px] font-bold uppercase tracking-wider">#{i + 1} Spotlight</span>
                 <h2 className="font-display text-lg md:text-3xl font-bold text-foreground mt-1 line-clamp-2">{pick.title}</h2>
                 <p className="text-secondary-foreground text-xs md:text-sm mt-1 max-w-md leading-relaxed hidden md:block">
@@ -189,31 +197,39 @@ const Home = () => {
             </div>
           </section>
 
-          {/* Editor's Pick - 6 per row */}
-          <section className="relative overflow-hidden rounded-lg bg-card border border-border p-4 md:p-6">
-            <div className="absolute bottom-0 right-0 w-32 h-32 md:w-48 md:h-48 overflow-hidden pointer-events-none">
-              <div className="absolute bottom-0 right-0 w-[200%] h-[200%] bg-primary/20 rotate-45 translate-x-[30%] translate-y-[30%]" />
-              <div className={`absolute bottom-2 right-2 w-16 h-20 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(6)} shadow-lg border border-border`} />
+          {/* Editor's Pick + Underrated - joined sections */}
+          <div className="relative overflow-hidden rounded-lg bg-card border border-border">
+            {/* Editor's Pick section */}
+            <div className="relative p-4 md:p-6 pb-6">
+              {/* Top-right corner embedded image */}
+              <div className="absolute top-0 right-0 w-28 h-28 md:w-40 md:h-40 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 right-0 w-[200%] h-[200%] bg-primary/10 -rotate-45 -translate-x-[30%] -translate-y-[30%]" />
+                <div className={`absolute top-2 right-2 w-14 h-18 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(6)} shadow-lg border border-border`} />
+              </div>
+              <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
+              <p className="text-muted-foreground text-[11px] mb-3 -mt-2">This is our favorite picks of all time</p>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
+                {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
+              </div>
             </div>
-            <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
-            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">This is our favorite picks of all time</p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
-              {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
-            </div>
-          </section>
 
-          {/* Underrated - 6 per row */}
-          <section className="relative overflow-hidden rounded-lg bg-card border border-border p-4 md:p-6">
-            <div className="absolute bottom-0 right-0 w-32 h-32 md:w-48 md:h-48 overflow-hidden pointer-events-none">
-              <div className="absolute bottom-0 right-0 w-[200%] h-[200%] bg-primary/20 rotate-45 translate-x-[30%] translate-y-[30%]" />
-              <div className={`absolute bottom-2 right-2 w-16 h-20 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(3)} shadow-lg border border-border`} />
+            {/* Divider */}
+            <div className="border-t border-border" />
+
+            {/* Underrated section */}
+            <div className="relative p-4 md:p-6 pt-6">
+              {/* Bottom-left corner embedded image */}
+              <div className="absolute bottom-0 left-0 w-28 h-28 md:w-40 md:h-40 overflow-hidden pointer-events-none">
+                <div className="absolute bottom-0 left-0 w-[200%] h-[200%] bg-primary/10 -rotate-45 translate-x-[-30%] translate-y-[30%]" />
+                <div className={`absolute bottom-2 left-2 w-14 h-18 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(3)} shadow-lg border border-border`} />
+              </div>
+              <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
+              <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Real gems that should get the attention they deserve</p>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
+                {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
+              </div>
             </div>
-            <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
-            <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Real gems that should get the attention they deserve</p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
-              {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
-            </div>
-          </section>
+          </div>
 
           {/* New on YugenAnime - 6 per row */}
           <section>
