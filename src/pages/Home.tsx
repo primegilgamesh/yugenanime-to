@@ -126,7 +126,7 @@ const Home = () => {
 
               {/* Left side: text content */}
               <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-[45%] md:bottom-8 md:left-8 md:right-[45%]">
+              <div className="absolute bottom-4 left-4 right-[45%] md:bottom-8 md:left-8 md:right-[30%]">
                 <span className="text-primary text-[10px] font-bold uppercase tracking-wider">#{i + 1} Spotlight</span>
                 <h2 className="font-display text-lg md:text-3xl font-bold text-foreground mt-1 line-clamp-2">{pick.title}</h2>
                 <p className="text-secondary-foreground text-xs md:text-sm mt-1 max-w-md leading-relaxed hidden md:block">
