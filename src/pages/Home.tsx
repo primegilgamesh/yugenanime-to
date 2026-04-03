@@ -101,15 +101,27 @@ const Home = () => {
                 <div className="absolute inset-0 backdrop-blur-md bg-black/40" />
               </div>
 
-              {/* Right side: clear anime image */}
-              <div className="absolute right-0 top-0 bottom-0 w-[45%] md:w-[40%]">
+              {/* Right side: clear anime image, clipped by diagonal */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                clipPath: 'polygon(55% 0%, 100% 0%, 100% 100%, 45% 100%)',
+              }}>
+                <div className={`w-full h-full bg-gradient-to-br ${pick.cover}`} />
+              </div>
+              {/* Desktop: move diagonal to 3/4 */}
+              <div className="absolute inset-0 pointer-events-none hidden md:block" style={{
+                clipPath: 'polygon(72% 0%, 100% 0%, 100% 100%, 62% 100%)',
+              }}>
                 <div className={`w-full h-full bg-gradient-to-br ${pick.cover}`} />
               </div>
 
-              {/* Diagonal white line separator */}
-              <div className="absolute inset-0 pointer-events-none" style={{
-                clipPath: 'polygon(52% 0%, 55% 0%, 45% 100%, 42% 100%)',
-                background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%)'
+              {/* Diagonal white line separator - thicker */}
+              <div className="absolute inset-0 pointer-events-none md:hidden" style={{
+                clipPath: 'polygon(53% 0%, 57% 0%, 47% 100%, 43% 100%)',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%)'
+              }} />
+              <div className="absolute inset-0 pointer-events-none hidden md:block" style={{
+                clipPath: 'polygon(70% 0%, 74% 0%, 64% 100%, 60% 100%)',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%)'
               }} />
 
               {/* Left side: text content */}
