@@ -12,7 +12,7 @@ const Sidebar = () => {
     { icon: Home, label: "Home", href: "/" },
     { icon: TrendingUp, label: "Trending", href: "/trending" },
     { icon: Clock, label: "Recents", href: "/recents" },
-    { icon: Compass, label: "Discover", href: "/" },
+    { icon: Compass, label: "Discover", href: "/discover" },
     { icon: History, label: "History", href: "/" },
   ];
 
