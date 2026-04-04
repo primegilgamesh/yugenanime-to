@@ -37,14 +37,16 @@ const AnimeInfoSidebar = ({ anime }: Props) => {
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex items-center gap-2">
+      {/* Average Score & Favorites as full-width buttons */}
+      <div className="w-full bg-muted rounded-md px-4 py-2.5 flex items-center gap-2">
         <Star size={16} className="text-score-star" fill="currentColor" />
         <span className="text-foreground font-semibold text-sm">{anime.score?.toFixed(2) || "—"} Average Score</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="w-full bg-muted rounded-md px-4 py-2.5 flex items-center gap-2">
         <Heart size={16} className="text-heart" fill="currentColor" />
         <span className="text-foreground text-sm">{anime.favorites?.toLocaleString() || "—"} Favorites</span>
       </div>
+
       <div className="border-t border-border pt-4 space-y-3">
         {infoItems.map(({ label, value }) => (
           <div key={label}>

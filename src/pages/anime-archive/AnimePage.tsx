@@ -41,7 +41,7 @@ const AnimePage = () => {
           <MobileAnimeInfo anime={anime} />
         </div>
 
-        <div className="flex gap-6 p-4 md:p-6">
+        <div className="flex gap-6 md:gap-10 p-4 md:p-6">
           <div className="w-64 flex-shrink-0 hidden md:block">
             <AnimeInfoSidebar anime={anime} />
           </div>
