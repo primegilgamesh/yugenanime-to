@@ -83,6 +83,7 @@ export const heroPicks: AnimeEntry[] = [
     cover: gradients[2],
     episodes: 28,
     episodesDub: 28,
+    dubbed: true,
     duration: "24 min per ep",
     status: "Finished Airing",
     premiered: "Fall 2023",
