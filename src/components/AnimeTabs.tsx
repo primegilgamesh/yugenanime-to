@@ -11,7 +11,7 @@ const AnimeTabs = ({ activeTab, onTabChange }: AnimeTabsProps) => (
       <button
         key={tab}
         onClick={() => onTabChange(tab)}
-        className={`px-6 py-3 text-sm font-medium transition-colors relative ${
+        className={`px-8 md:px-10 py-3 text-sm font-medium transition-colors relative ${
           activeTab === tab
             ? "text-tab-active"
             : "text-muted-foreground hover:text-foreground"
