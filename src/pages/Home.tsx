@@ -164,7 +164,7 @@ const Home = () => {
         <div className="px-4 md:px-6 py-4 space-y-8">
           {/* Recently Released - 5 per row */}
           <section>
-            <SectionHeader icon={Clock} title="Recently Released" />
+            <SectionHeader icon={Clock} title="Recently Released" href="/recents" />
             <div className="flex gap-2 mb-3">
               {tabs.map((tab) => (
                 <button key={tab} onClick={() => setActiveTab(tab)} className={`text-[11px] font-semibold px-3 py-1 rounded-md transition-colors ${activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
@@ -173,13 +173,26 @@ const Home = () => {
               ))}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {recentlyReleased.slice(0, 10).map((anime, i) => (
+              {recentlyReleased
+                .filter((anime) => {
+                  if (activeTab === "All") return true;
+                  if (activeTab === "SUB") return !anime.dubbed;
+                  if (activeTab === "CHINESE") return anime.titleNative && /[\u4e00-\u9fff]/.test(anime.titleNative) && !anime.titleNative.match(/[\u3040-\u309f\u30a0-\u30ff]/);
+                  return true;
+                })
+                .slice(0, 10)
+                .map((anime, i) => (
                 <Link to={`/anime/${anime.slug}/watch/${anime.episodes || 1}`} key={anime.slug} className="group block">
                   <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-video`}>
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                     <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
                       EP {anime.episodes}
                     </div>
+                    {anime.dubbed && (
+                      <div className="absolute top-1.5 right-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
+                        <Languages size={10} /> Dub
+                      </div>
+                    )}
                     <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">24:00</div>
                   </div>
                   <div className="mt-1.5">
