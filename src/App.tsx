@@ -11,6 +11,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Trending from "./pages/Trending";
 import Recents from "./pages/Recents";
+import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/trending" element={<Trending />} />
             <Route path="/recents" element={<Recents />} />
+            <Route path="/discover" element={<Discover />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
