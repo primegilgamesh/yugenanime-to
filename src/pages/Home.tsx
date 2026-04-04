@@ -114,15 +114,6 @@ const Home = () => {
                 <div className={`w-full h-full bg-gradient-to-br ${pick.cover}`} />
               </div>
 
-              {/* Diagonal white line separator - thicker */}
-              <div className="absolute inset-0 pointer-events-none md:hidden" style={{
-                clipPath: 'polygon(53% 0%, 57% 0%, 47% 100%, 43% 100%)',
-                background: 'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%)'
-              }} />
-              <div className="absolute inset-0 pointer-events-none hidden md:block" style={{
-                clipPath: 'polygon(70% 0%, 74% 0%, 64% 100%, 60% 100%)',
-                background: 'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%)'
-              }} />
 
               {/* Left side: text content */}
               <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
