@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { allAnime } from "@/data/animeData";
+
 const schedule = [
   {
     day: "TUE",
@@ -71,6 +74,18 @@ const schedule = [
   },
 ];
 
+const findAnimeSlug = (title: string): string | null => {
+  const normalizedTitle = title.replace(/\.{3}$/, "").toLowerCase();
+  const match = allAnime.find(
+    (a) =>
+      a.title.toLowerCase().includes(normalizedTitle) ||
+      normalizedTitle.includes(a.title.toLowerCase()) ||
+      a.titleRomaji?.toLowerCase().includes(normalizedTitle) ||
+      a.titleEnglish?.toLowerCase().includes(normalizedTitle)
+  );
+  return match?.slug || null;
+};
+
 const ScheduleModal = () => {
   const now = new Date();
   const timeStr = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
@@ -85,12 +100,21 @@ const ScheduleModal = () => {
         <div key={day.day}>
           <h3 className="text-foreground font-bold text-sm mb-2">{day.day}</h3>
           <div className="space-y-1">
-            {day.entries.map((entry, i) => (
-              <div key={i} className="flex gap-3 py-1">
-                <span className="text-primary text-sm font-medium w-12 flex-shrink-0">{entry.time}</span>
-                <span className="text-muted-foreground text-sm">{entry.title}</span>
-              </div>
-            ))}
+            {day.entries.map((entry, i) => {
+              const slug = findAnimeSlug(entry.title);
+              return (
+                <div key={i} className="flex gap-3 py-1">
+                  <span className="text-primary text-sm font-medium w-12 flex-shrink-0">{entry.time}</span>
+                  {slug ? (
+                    <Link to={`/anime/${slug}`} className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                      {entry.title}
+                    </Link>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">{entry.title}</span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}
