@@ -58,7 +58,7 @@ const AnimeHeroBanner = ({ anime }: Props) => {
         {/* Desktop layout: image with title beside it, buttons below */}
         <div className="hidden md:block">
           <div className="flex items-end gap-4">
-            <div className={`w-[130px] h-[185px] rounded-md bg-gradient-to-br ${anime.cover} border-2 border-background shadow-lg flex-shrink-0`} />
+            <div className={`w-[160px] h-[225px] rounded-md bg-gradient-to-br ${anime.cover} border-2 border-background shadow-lg flex-shrink-0`} />
             <h1 className="font-display text-2xl font-bold mb-2">{anime.title}</h1>
           </div>
           <div className="flex items-center gap-3 mt-3">
