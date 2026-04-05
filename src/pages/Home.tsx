@@ -20,12 +20,12 @@ import {
 const tabs = ["All", "SUB", "CHINESE"] as const;
 
 const reviews = [
-  { anime: "I've Got a Million Skill Points!", user: "MadSlime", quote: "when will this be out i kinda want to watch it so bad its hurting my last brain cell, c'mon guys release it already, i cannnot", time: "about 6 hours ago", likes: 0, gradient: 2 },
-  { anime: "Plastic Memories", user: "TimmyFlame", quote: "Heartfelt story with interesting takeaways", time: "about 14 hours ago", likes: 0, gradient: 5 },
-  { anime: "Kusuriya no Hitorigoto", user: "Maya_cato78", quote: "TALENTED SHIKISO LMFAOOOOOOO", time: "a day ago", likes: 7, gradient: 1 },
-  { anime: "Youkoso Jitsuryoku Shijou Shugi no Classroom e 3rd Season", user: "Treyennes", quote: "School anime at it's best", time: "a day ago", likes: 3, gradient: 8 },
-  { anime: "Sousou no Frieren", user: "AniChiwa", quote: "Best anime in this genre!", time: "a day ago", likes: 0, gradient: 0 },
-  { anime: "I've Got a Million Skill Points!", user: "NightShade587", quote: "Some descriptions, I should be clear, the anime is alright because it currently has no description.", time: "2 days ago", likes: 1, gradient: 3 },
+  { anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "MadSlime", quote: "when will this be out i kinda want to watch it so bad its hurting my last brain cell, c'mon guys release it already, i cannnot", time: "about 6 hours ago", likes: 0, gradient: 2 },
+  { anime: "Plastic Memories", slug: "plastic-memories", user: "TimmyFlame", quote: "Heartfelt story with interesting takeaways", time: "about 14 hours ago", likes: 0, gradient: 5 },
+  { anime: "Kusuriya no Hitorigoto", slug: "kusuriya-no-hitorigoto", user: "Maya_cato78", quote: "TALENTED SHIKISO LMFAOOOOOOO", time: "a day ago", likes: 7, gradient: 1 },
+  { anime: "Youkoso Jitsuryoku Shijou Shugi no Classroom e 3rd Season", slug: "youkoso-jitsuryoku", user: "Treyennes", quote: "School anime at it's best", time: "a day ago", likes: 3, gradient: 8 },
+  { anime: "Sousou no Frieren", slug: "frieren", user: "AniChiwa", quote: "Best anime in this genre!", time: "a day ago", likes: 0, gradient: 0 },
+  { anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "NightShade587", quote: "Some descriptions, I should be clear, the anime is alright because it currently has no description.", time: "2 days ago", likes: 1, gradient: 3 },
 ];
 
 // Extend heroPicks to 7 slides
