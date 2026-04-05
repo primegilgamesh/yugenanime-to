@@ -268,17 +268,17 @@ const Home = () => {
             <SectionHeader icon={MessageSquareText} title="Recent YugenAnime Reviews" iconColor="text-primary" />
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               {reviews.map((review, i) => (
-                <div key={i} className="bg-card border border-border rounded-lg overflow-hidden">
+                <Link to={`/anime/${review.slug}?tab=Reviews`} key={i} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/50 transition-colors">
                   <div className={`w-full h-28 bg-gradient-to-br ${getGradient(review.gradient)}`} />
                   <div className="p-3">
-                    <p className="text-primary text-[11px] font-medium">Review of {review.anime} by {review.user}</p>
+                    <p className="text-primary text-[11px] font-medium group-hover:underline">Review of {review.anime} by {review.user}</p>
                     <p className="text-secondary-foreground text-xs italic mt-1">"{review.quote}"</p>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-muted-foreground text-[10px]">{review.time}</span>
                       <span className="text-muted-foreground text-[10px] flex items-center gap-1"><ThumbsUp size={10} /> {review.likes}</span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
