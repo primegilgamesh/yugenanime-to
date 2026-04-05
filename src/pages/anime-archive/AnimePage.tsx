@@ -16,7 +16,15 @@ import { allAnime } from "@/data/animeData";
 
 const AnimePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [activeTab, setActiveTab] = useState("Overview");
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "Overview");
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab && ["Overview", "Watch", "Reviews"].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   const anime = allAnime.find((a) => a.slug === slug);
 
