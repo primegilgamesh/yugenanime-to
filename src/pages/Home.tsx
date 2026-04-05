@@ -190,7 +190,7 @@ const Home = () => {
                     </div>
                     {anime.dubbed && (
                       <div className="absolute top-1.5 right-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
-                        <Languages size={10} /> Dub
+                        <Headphones size={10} /> Available in Dub
                       </div>
                     )}
                     <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">24:00</div>
