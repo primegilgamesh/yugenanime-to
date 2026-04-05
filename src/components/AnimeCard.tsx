@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, Languages } from "lucide-react";
+import { Star, Headphones } from "lucide-react";
 
 interface AnimeCardProps {
   slug: string;
