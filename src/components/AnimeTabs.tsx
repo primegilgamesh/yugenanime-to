@@ -6,12 +6,14 @@ interface AnimeTabsProps {
 }
 
 const AnimeTabs = ({ activeTab, onTabChange }: AnimeTabsProps) => (
-  <div className="flex justify-center md:justify-start border-b border-border">
-    {tabs.map((tab) => (
+  <div className="flex border-b border-border">
+    {tabs.map((tab, i) => (
       <button
         key={tab}
         onClick={() => onTabChange(tab)}
-        className={`px-8 md:px-10 py-3 text-sm font-medium transition-colors relative ${
+        className={`py-3 text-sm font-medium transition-colors relative ${
+          i === 0 ? "text-left px-4 md:px-6" : i === 1 ? "px-8 md:px-16 mx-auto" : "ml-auto px-4 md:px-6"
+        } ${
           activeTab === tab
             ? "text-tab-active"
             : "text-muted-foreground hover:text-foreground"
