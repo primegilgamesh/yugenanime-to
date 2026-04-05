@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Compass } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Star, Languages } from "lucide-react";
+import { Star, Headphones } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
