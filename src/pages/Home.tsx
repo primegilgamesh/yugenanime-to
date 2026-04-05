@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, TouchEvent } from "react";
 import { Link } from "react-router-dom";
-import { Clock, TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Languages, ThumbsUp } from "lucide-react";
+import { Clock, TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Headphones, ThumbsUp } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
