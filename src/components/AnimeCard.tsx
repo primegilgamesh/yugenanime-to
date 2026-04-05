@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, Languages } from "lucide-react";
+import { Star, Headphones } from "lucide-react";
 
 interface AnimeCardProps {
   slug: string;
@@ -26,8 +26,8 @@ const AnimeCard = ({ slug, title, season, score, gradient, dubbed, variant = "de
       )}
       {/* Dubbed badge */}
       {dubbed && (
-        <div className="absolute bottom-1.5 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
-          <Languages size={10} /> Dub
+        <div className="absolute bottom-8 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
+          <Headphones size={10} /> Available in Dub
         </div>
       )}
       {/* Title overlay at bottom */}

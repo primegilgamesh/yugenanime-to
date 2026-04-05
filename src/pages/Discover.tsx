@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Compass } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Star, Languages } from "lucide-react";
+import { Star, Headphones } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
@@ -64,8 +64,8 @@ const Discover = () => {
                 <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(startIdx + i)} aspect-[3/4]`}>
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                   {anime.dubbed && (
-                    <div className="absolute top-1.5 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
-                      <Languages size={10} /> Available in Dub
+                    <div className="absolute bottom-8 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
+                      <Headphones size={10} /> Available in Dub
                     </div>
                   )}
                   <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
