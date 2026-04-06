@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, X, ChevronDown, User, List, LogOut } from "lucide-react";
+import { Search, X, User, List, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, AVATARS } from "@/contexts/AuthContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { allAnime } from "@/data/animeData";
 
 const DiscordIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -12,15 +13,49 @@ const DiscordIcon = () => (
 
 const TopBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<typeof allAnime>([]);
   const [profileOpen, setProfileOpen] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const desktopInputRef = useRef<HTMLInputElement>(null);
   const { user, isLoggedIn, logout, setAvatar } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (searchOpen) inputRef.current?.focus();
   }, [searchOpen]);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 0) {
+      const q = searchQuery.toLowerCase();
+      const results = allAnime.filter((a) =>
+        a.title.toLowerCase().includes(q) ||
+        a.titleEnglish?.toLowerCase().includes(q) ||
+        a.titleRomaji?.toLowerCase().includes(q)
+      ).slice(0, 8);
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/discover?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setSearchOpen(false);
+      setSearchResults([]);
+    }
+  };
+
+  const handleResultClick = (slug: string) => {
+    navigate(`/anime/${slug}`);
+    setSearchQuery("");
+    setSearchOpen(false);
+    setSearchResults([]);
+  };
 
   const handleLogout = () => {
     logout();
@@ -54,9 +89,9 @@ const TopBar = () => {
           <button onClick={() => setShowAvatarPicker(true)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
             <User size={14} /> Profile
           </button>
-          <button onClick={() => { navigate("/"); setProfileOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors md:hidden">
+          <Link to="/my-list" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
             <List size={14} /> List
-          </button>
+          </Link>
           <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2.5 text-destructive text-sm hover:bg-secondary transition-colors">
             <LogOut size={14} /> Logout
           </button>
@@ -65,19 +100,62 @@ const TopBar = () => {
     </div>
   );
 
-  const searchBar = (
-    <div className="flex items-center bg-secondary rounded-md px-3 py-1.5 gap-2">
-      <Search size={14} className="text-muted-foreground" />
-      <input placeholder="Search" className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none w-full" />
+  const searchDropdown = searchResults.length > 0 && (
+    <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-md shadow-lg z-50 max-h-[300px] overflow-y-auto">
+      {searchResults.map((a) => (
+        <button key={a.slug} onClick={() => handleResultClick(a.slug)} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-secondary transition-colors text-left">
+          <div className={`w-8 h-10 rounded bg-gradient-to-br ${a.cover} flex-shrink-0`} />
+          <div className="min-w-0">
+            <p className="text-foreground text-sm font-medium truncate">{a.title}</p>
+            <p className="text-muted-foreground text-[10px]">{a.season} • {a.score?.toFixed(2)}</p>
+          </div>
+        </button>
+      ))}
+      <button onClick={handleSearchSubmit} className="w-full px-3 py-2 text-primary text-xs hover:bg-secondary transition-colors text-center">
+        View all results in Discover →
+      </button>
     </div>
   );
 
+  const searchBar = (
+    <form onSubmit={handleSearchSubmit} className="relative">
+      <div className="flex items-center bg-secondary rounded-md px-3 py-1.5 gap-2">
+        <Search size={14} className="text-muted-foreground" />
+        <input
+          ref={desktopInputRef}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search anime..."
+          className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none w-full"
+        />
+        {searchQuery && (
+          <button type="button" onClick={() => setSearchQuery("")} className="text-muted-foreground hover:text-foreground">
+            <X size={12} />
+          </button>
+        )}
+      </div>
+      {searchDropdown}
+    </form>
+  );
+
   return (
-    <header className="h-12 bg-card flex items-center px-4 gap-4 border-b border-border">
+    <header className="h-12 bg-card flex items-center px-4 gap-4 border-b border-border relative">
       {searchOpen ? (
         <div className="flex-1 flex items-center gap-2 md:hidden">
-          <div className="flex-1">{searchBar}</div>
-          <button onClick={() => setSearchOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors"><X size={18} /></button>
+          <form onSubmit={handleSearchSubmit} className="flex-1 relative">
+            <div className="flex items-center bg-secondary rounded-md px-3 py-1.5 gap-2">
+              <Search size={14} className="text-muted-foreground" />
+              <input
+                ref={inputRef}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search anime..."
+                className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none w-full"
+              />
+            </div>
+            {searchDropdown}
+          </form>
+          <button onClick={() => { setSearchOpen(false); setSearchQuery(""); setSearchResults([]); }} className="text-muted-foreground hover:text-foreground transition-colors"><X size={18} /></button>
         </div>
       ) : (
         <>
@@ -104,24 +182,6 @@ const TopBar = () => {
             )}
           </div>
         </>
-      )}
-      {searchOpen && (
-        <div className="hidden md:contents">
-          <Link to="/" className="text-foreground font-display font-bold text-base mr-4">✦ YugenAnime</Link>
-          <div className="flex-1 max-w-md">{searchBar}</div>
-          <div className="ml-auto flex items-center gap-3">
-            <a href="https://discord.gg/lovable-dev" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-              <DiscordIcon />
-            </a>
-            {isLoggedIn ? (
-              <button className="w-7 h-7 rounded-full overflow-hidden border border-border">
-                <img src={user?.avatar} alt="" className="w-full h-full" />
-              </button>
-            ) : (
-              <Link to="/signin" className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-md hover:opacity-90 transition">Sign in</Link>
-            )}
-          </div>
-        </div>
       )}
     </header>
   );
