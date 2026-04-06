@@ -36,8 +36,8 @@ const Sidebar = () => {
           <Calendar size={20} />
           <span className="text-[10px]">Schedule</span>
         </button>
-        {isLoggedIn && (
-          <Link to="/" className="flex flex-col items-center gap-1 py-3 px-2 w-full text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover transition-colors">
+    {isLoggedIn && (
+          <Link to="/my-list" className="flex flex-col items-center gap-1 py-3 px-2 w-full text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover transition-colors">
             <List size={20} />
             <span className="text-[10px]">List</span>
           </Link>
