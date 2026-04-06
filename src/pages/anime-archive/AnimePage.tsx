@@ -75,7 +75,7 @@ const AnimePage = () => {
                 episodeList={anime.episodeList}
               />
             )}
-            {activeTab === "Reviews" && <ReviewsSection />}
+            {activeTab === "Reviews" && <ReviewsSection slug={anime.slug} />}
           </div>
         </div>
       </div>
