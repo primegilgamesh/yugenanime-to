@@ -1,43 +1,49 @@
 import { useState } from "react";
-import { Home, TrendingUp, Clock, Compass, History, Calendar, List, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Home, TrendingUp, Clock, Compass, History as HistoryIcon, Calendar, List, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import ScheduleModal from "@/components/ScheduleModal";
 
 const Sidebar = () => {
   const { isLoggedIn } = useAuth();
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: TrendingUp, label: "Trending", href: "/trending" },
     { icon: Clock, label: "Recents", href: "/recents" },
     { icon: Compass, label: "Discover", href: "/discover" },
-    { icon: History, label: "History", href: "/" },
+    { icon: HistoryIcon, label: "History", href: "/history" },
   ];
+
+  const isActive = (href: string) => href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
 
   return (
     <>
       <aside className="fixed left-0 top-0 h-full w-[70px] bg-sidebar-bg flex-col items-center pt-4 z-50 border-r border-border hidden md:flex">
-        {navItems.map(({ icon: Icon, label, href }) => (
-          <Link
-            key={label}
-            to={href}
-            className="flex flex-col items-center gap-1 py-3 px-2 w-full text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover transition-colors"
-          >
-            <Icon size={20} />
-            <span className="text-[10px]">{label}</span>
-          </Link>
-        ))}
+        {navItems.map(({ icon: Icon, label, href }) => {
+          const active = isActive(href);
+          return (
+            <Link
+              key={label}
+              to={href}
+              className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${active ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}
+            >
+              <Icon size={20} />
+              <span className="text-[10px]">{label}</span>
+            </Link>
+          );
+        })}
         <button
           onClick={() => setScheduleOpen((v) => !v)}
-          className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${scheduleOpen ? "text-foreground bg-sidebar-hover" : "text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover"}`}
+          className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${scheduleOpen ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}
         >
           <Calendar size={20} />
           <span className="text-[10px]">Schedule</span>
         </button>
-    {isLoggedIn && (
-          <Link to="/my-list" className="flex flex-col items-center gap-1 py-3 px-2 w-full text-sidebar-fg hover:text-foreground hover:bg-sidebar-hover transition-colors">
+        {isLoggedIn && (
+          <Link to="/my-list" className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${isActive("/my-list") ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}>
             <List size={20} />
             <span className="text-[10px]">List</span>
           </Link>
