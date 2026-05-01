@@ -14,6 +14,9 @@ import Trending from "./pages/Trending";
 import Recents from "./pages/Recents";
 import Discover from "./pages/Discover";
 import MyList from "./pages/MyList";
+import History from "./pages/History";
+import Profile from "./pages/Profile";
+import { NewPage, PopularPage, ReviewsPage } from "./pages/MorePages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +39,11 @@ const App = () => (
               <Route path="/recents" element={<Recents />} />
               <Route path="/discover" element={<Discover />} />
               <Route path="/my-list" element={<MyList />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/new" element={<NewPage />} />
+              <Route path="/popular" element={<PopularPage />} />
+              <Route path="/reviews" element={<ReviewsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
