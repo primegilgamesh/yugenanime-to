@@ -207,7 +207,7 @@ const Home = () => {
 
           {/* Trending Airing - 6 per row */}
           <section>
-            <SectionHeader icon={TrendingUp} title="Trending Airing Series" iconColor="text-primary" />
+            <SectionHeader icon={TrendingUp} title="Trending Airing Series" iconColor="text-primary" href="/trending" />
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
               {trendingAiring.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i} />)}
             </div>
@@ -222,7 +222,7 @@ const Home = () => {
                 <div className="absolute top-0 right-0 w-[200%] h-[200%] bg-primary/10 -rotate-45 -translate-x-[30%] -translate-y-[30%]" />
                 <div className={`absolute top-2 right-2 w-14 h-18 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(6)} shadow-lg border border-border`} />
               </div>
-              <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" />
+              <SectionHeader icon={Sparkles} title="Editor's Pick" iconColor="text-score-star" hideArrow />
               <p className="text-muted-foreground text-[11px] mb-3 -mt-2">This is our favorite picks of all time</p>
               <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
                 {editorsPick.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 6} />)}
@@ -239,7 +239,7 @@ const Home = () => {
                 <div className="absolute bottom-0 left-0 w-[200%] h-[200%] bg-primary/10 -rotate-45 translate-x-[-30%] translate-y-[30%]" />
                 <div className={`absolute bottom-2 left-2 w-14 h-18 md:w-20 md:h-28 rounded-md bg-gradient-to-br ${getGradient(3)} shadow-lg border border-border`} />
               </div>
-              <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" />
+              <SectionHeader icon={HeartHandshake} title="Underrated Series" iconColor="text-heart" hideArrow />
               <p className="text-muted-foreground text-[11px] mb-3 -mt-2">Real gems that should get the attention they deserve</p>
               <div className="grid grid-cols-2 md:grid-cols-6 gap-3 relative z-10">
                 {underratedSeries.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 3} />)}
@@ -249,7 +249,7 @@ const Home = () => {
 
           {/* New on YugenAnime - 6 per row */}
           <section>
-            <SectionHeader icon={Plus} title="New on YugenAnime" iconColor="text-primary" />
+            <SectionHeader icon={Plus} title="New on YugenAnime" iconColor="text-primary" href="/new" />
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
               {newOnYugen.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i + 9} />)}
             </div>
@@ -257,7 +257,7 @@ const Home = () => {
 
           {/* Most Popular - 6 per row */}
           <section>
-            <SectionHeader icon={Flame} title="Most Popular Series" iconColor="text-score-star" />
+            <SectionHeader icon={Flame} title="Most Popular Series" iconColor="text-score-star" href="/popular" />
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
               {mostPopular.map((anime, i) => <AnimePortraitCard key={anime.slug} anime={anime} i={i} />)}
             </div>
@@ -265,7 +265,7 @@ const Home = () => {
 
           {/* Recent Reviews - 4 per row desktop */}
           <section>
-            <SectionHeader icon={MessageSquareText} title="Recent YugenAnime Reviews" iconColor="text-primary" />
+            <SectionHeader icon={MessageSquareText} title="Recent YugenAnime Reviews" iconColor="text-primary" href="/reviews" />
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               {reviews.map((review, i) => (
                 <Link to={`/anime/${review.slug}?tab=Reviews`} key={i} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/50 transition-colors">

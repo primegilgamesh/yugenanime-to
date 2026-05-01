@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth, AVATARS } from "@/contexts/AuthContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { allAnime } from "@/data/animeData";
+import yugenLogo from "@/assets/yugen-logo.png";
 
 const DiscordIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -89,6 +90,9 @@ const TopBar = () => {
           <button onClick={() => setShowAvatarPicker(true)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
             <User size={14} /> Profile
           </button>
+          <Link to="/profile" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
+            <User size={14} /> Profile
+          </Link>
           <Link to="/my-list" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
             <List size={14} /> List
           </Link>
@@ -159,7 +163,10 @@ const TopBar = () => {
         </div>
       ) : (
         <>
-          <Link to="/" className="text-foreground font-display font-bold text-base mr-4">✦ YugenAnime</Link>
+          <Link to="/" className="text-foreground font-display font-bold text-base mr-4 flex items-center gap-1.5">
+            <img src={yugenLogo} alt="YugenAnime" width={20} height={20} className="w-5 h-5" />
+            YugenAnime
+          </Link>
           <div className="flex-1 max-w-md hidden md:block">{searchBar}</div>
           <div className="ml-auto flex items-center gap-3">
             <button className="md:hidden text-muted-foreground hover:text-foreground transition-colors" onClick={() => setSearchOpen(true)}><Search size={18} /></button>
