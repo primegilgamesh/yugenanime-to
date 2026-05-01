@@ -40,7 +40,7 @@ const AnimePage = () => {
   const anime = {
     ...found,
     synopsis: found.synopsis || `${found.title} is a ${found.genres || "captivating"} ${found.format || "anime"} series ${found.season ? `that premiered in ${found.season}` : ""}${found.studios ? ` by ${found.studios}` : ""}. Follow an unforgettable journey filled with memorable characters, breathtaking visuals, and an immersive story that fans of the genre will love.`,
-    trailerUrl: found.trailerUrl || "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    trailerUrl: found.trailerUrl || "https://www.youtube.com/embed/qgQBwRJVBdU",
   };
 
   return (
