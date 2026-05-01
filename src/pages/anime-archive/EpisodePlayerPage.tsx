@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Heart, Play, Rewind, FastForward, Settings, Maximize, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
@@ -8,14 +8,23 @@ import Sidebar from "@/components/Sidebar";
 import MobileDescription from "@/components/MobileDescription";
 import { allAnime } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
+import { useList } from "@/contexts/ListContext";
 
 const EpisodePlayerPage = () => {
   const { slug, episode } = useParams<{ slug: string; episode: string }>();
   const epNum = parseInt(episode || "1");
   const { isLoggedIn } = useAuth();
+  const { recordWatch } = useList();
   const [autoNext, setAutoNext] = useState(true);
 
   const anime = allAnime.find((a) => a.slug === slug);
+
+  useEffect(() => {
+    if (anime && isLoggedIn) {
+      const epTitle = anime.episodeList?.find((e) => e.num === epNum)?.title;
+      recordWatch(anime.slug, anime.title, anime.cover, epNum, epTitle);
+    }
+  }, [anime, epNum, isLoggedIn, recordWatch]);
 
   if (!anime) {
     return (
