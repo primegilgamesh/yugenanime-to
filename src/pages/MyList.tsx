@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { List, Heart, Eye, Clock, CheckCircle, XCircle, Star } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { List, Heart, Eye, Clock, CheckCircle, XCircle, Star, ArrowLeft, X } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
@@ -19,8 +19,9 @@ const tabs = [
 
 const MyList = () => {
   const { isLoggedIn } = useAuth();
-  const { listItems, favorites } = useList();
+  const { listItems, favorites, removeFromList, toggleFavorite } = useList();
   const [activeTab, setActiveTab] = useState<string>("favorites");
+  const navigate = useNavigate();
 
   if (!isLoggedIn) {
     return (
@@ -58,6 +59,9 @@ const MyList = () => {
         />
         <div className="relative px-4 md:px-6 py-4">
           <div className="flex items-center gap-2 mb-4">
+            <button onClick={() => navigate(-1)} className="text-foreground hover:text-primary p-1 -ml-1" aria-label="Back">
+              <ArrowLeft size={18} />
+            </button>
             <List size={18} className="text-primary" />
             <h1 className="text-foreground font-display font-bold text-lg">My List</h1>
           </div>
@@ -90,18 +94,35 @@ const MyList = () => {
                 const anime = allAnime.find((a) => a.slug === item.slug);
                 const total = anime?.episodes || 0;
                 return (
-                  <Link to={`/anime/${item.slug}`} key={item.slug} className="group block">
-                    <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${item.cover || getGradient(i)} aspect-[3/4]`}>
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                      {item.episodesWatched > 0 && (
-                        <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
-                          {item.episodesWatched}{total ? `/${total}` : ""} watched
+                  <div key={item.slug} className="group block relative">
+                    <Link to={`/anime/${item.slug}`}>
+                      <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${item.cover || getGradient(i)} aspect-[3/4]`}>
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                        {item.episodesWatched > 0 && (
+                          <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
+                            {item.episodesWatched}{total ? `/${total}` : ""} watched
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
+                          <p className="text-foreground text-xs font-semibold leading-tight truncate">{item.title}</p>
                         </div>
-                      )}
-                      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-                        <p className="text-foreground text-xs font-semibold leading-tight truncate">{item.title}</p>
                       </div>
-                    </div>
+                    </Link>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (activeTab === "favorites") {
+                          toggleFavorite(item.slug, item.title, item.cover);
+                        } else {
+                          removeFromList(item.slug);
+                        }
+                      }}
+                      className="absolute top-1.5 right-1.5 bg-background/80 hover:bg-destructive text-foreground hover:text-destructive-foreground p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      aria-label="Remove"
+                    >
+                      <X size={12} />
+                    </button>
                     <div className="mt-1.5">
                       <p className="text-foreground text-xs font-medium truncate group-hover:text-primary transition-colors">{item.title}</p>
                       <div className="flex items-center gap-2 mt-0.5">
@@ -115,7 +136,7 @@ const MyList = () => {
                         )}
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
