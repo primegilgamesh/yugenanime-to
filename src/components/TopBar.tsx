@@ -87,12 +87,6 @@ const TopBar = () => {
               <p className="text-muted-foreground text-[10px]">{user?.email}</p>
             </div>
           </div>
-          <button onClick={() => setShowAvatarPicker(true)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
-            <User size={14} /> Profile
-          </button>
-          <Link to="/profile" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
-            <User size={14} /> Profile
-          </Link>
           <Link to="/my-list" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
             <List size={14} /> List
           </Link>

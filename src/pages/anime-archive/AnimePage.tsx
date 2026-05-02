@@ -12,7 +12,8 @@ import EpisodeGrid from "@/components/EpisodeGrid";
 import ReviewsSection from "@/components/ReviewsSection";
 import AnimeHeroBanner from "@/components/AnimeHeroBanner";
 import TrailerSection from "@/components/TrailerSection";
-import { allAnime } from "@/data/animeData";
+import { allAnime, getRelatedSeasons } from "@/data/animeData";
+import { Link } from "react-router-dom";
 
 const AnimePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -71,6 +72,28 @@ const AnimePage = () => {
                   </p>
                 </div>
                 <TrailerSection trailerUrl={anime.trailerUrl} />
+                {(() => {
+                  const related = getRelatedSeasons(anime.slug);
+                  if (related.length === 0) return null;
+                  return (
+                    <div className="space-y-3">
+                      <h3 className="text-foreground font-display font-semibold text-base">Related Seasons</h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {related.map((r) => (
+                          <Link to={`/anime/${r.slug}`} key={r.slug} className="group block">
+                            <div className={`relative aspect-[3/4] rounded-md bg-gradient-to-br ${r.cover} overflow-hidden`}>
+                              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
+                              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                                <p className="text-foreground text-xs font-semibold truncate">{r.title}</p>
+                                <p className="text-muted-foreground text-[10px]">{r.season}</p>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
                 <StatusDistribution />
               </>
             )}

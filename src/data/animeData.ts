@@ -1773,3 +1773,67 @@ export const allAnime: AnimeEntry[] = [
   ...additionalAnime,
   ...seasonalExpansion,
 ].filter((a, i, arr) => arr.findIndex((b) => b.slug === a.slug) === i);
+
+// Additional seasons / franchise entries (sequels, prequels, OVAs of well-known shows)
+export const otherSeasons: AnimeEntry[] = [
+  // Frieren has only one season — add a hypothetical S2 placeholder
+  { slug: "frieren-s2", title: "Sousou no Frieren Season 2", titleRomaji: "Sousou no Frieren 2", titleEnglish: "Frieren: Beyond Journey's End Season 2", season: "Winter 2026", score: 9.05, cover: gradients[2], episodes: 24, dubbed: false, studios: "Madhouse", format: "TV", genres: "Adventure, Drama, Fantasy", status: "Not Yet Aired", synopsis: "Frieren continues her journey northward, unraveling more mysteries of the world she once helped save." },
+  // Attack on Titan family
+  { slug: "attack-on-titan", title: "Shingeki no Kyojin", titleRomaji: "Shingeki no Kyojin", titleEnglish: "Attack on Titan", season: "Spring 2013", score: 8.55, cover: gradients[3], episodes: 25, dubbed: true, studios: "Wit Studio", format: "TV", genres: "Action, Drama, Fantasy", status: "Finished Airing" },
+  { slug: "attack-on-titan-s2", title: "Shingeki no Kyojin Season 2", titleEnglish: "Attack on Titan Season 2", season: "Spring 2017", score: 8.45, cover: gradients[3], episodes: 12, dubbed: true, studios: "Wit Studio", format: "TV", genres: "Action, Drama, Fantasy", status: "Finished Airing" },
+  { slug: "attack-on-titan-s3", title: "Shingeki no Kyojin Season 3", titleEnglish: "Attack on Titan Season 3", season: "Summer 2018", score: 8.62, cover: gradients[3], episodes: 12, dubbed: true, studios: "Wit Studio", format: "TV", genres: "Action, Drama, Fantasy", status: "Finished Airing" },
+  { slug: "attack-on-titan-final", title: "Shingeki no Kyojin: The Final Season", titleEnglish: "Attack on Titan Final Season", season: "Winter 2020", score: 8.78, cover: gradients[3], episodes: 16, dubbed: true, studios: "MAPPA", format: "TV", genres: "Action, Drama, Fantasy", status: "Finished Airing" },
+  // Demon Slayer family
+  { slug: "demon-slayer", title: "Kimetsu no Yaiba", titleEnglish: "Demon Slayer", season: "Spring 2019", score: 8.42, cover: gradients[1], episodes: 26, dubbed: true, studios: "Ufotable", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "demon-slayer-mugen", title: "Kimetsu no Yaiba: Mugen Ressha-hen", titleEnglish: "Demon Slayer: Mugen Train Arc", season: "Fall 2021", score: 8.30, cover: gradients[1], episodes: 7, dubbed: true, studios: "Ufotable", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "demon-slayer-entertainment", title: "Kimetsu no Yaiba: Yuukaku-hen", titleEnglish: "Demon Slayer: Entertainment District Arc", season: "Fall 2021", score: 8.65, cover: gradients[1], episodes: 11, dubbed: true, studios: "Ufotable", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "demon-slayer-swordsmith", title: "Kimetsu no Yaiba: Katanakaji no Sato-hen", titleEnglish: "Demon Slayer: Swordsmith Village Arc", season: "Spring 2023", score: 8.20, cover: gradients[1], episodes: 11, dubbed: true, studios: "Ufotable", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "demon-slayer-hashira", title: "Kimetsu no Yaiba: Hashira Geiko-hen", titleEnglish: "Demon Slayer: Hashira Training Arc", season: "Spring 2024", score: 7.85, cover: gradients[1], episodes: 8, dubbed: true, studios: "Ufotable", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  // Jujutsu Kaisen
+  { slug: "jujutsu-kaisen", title: "Jujutsu Kaisen", titleEnglish: "Jujutsu Kaisen", season: "Fall 2020", score: 8.61, cover: gradients[5], episodes: 24, dubbed: true, studios: "MAPPA", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "jujutsu-kaisen-s2", title: "Jujutsu Kaisen Season 2", titleEnglish: "Jujutsu Kaisen Season 2", season: "Summer 2023", score: 8.72, cover: gradients[5], episodes: 23, dubbed: true, studios: "MAPPA", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "jujutsu-kaisen-s3", title: "Jujutsu Kaisen Season 3", titleEnglish: "Jujutsu Kaisen Season 3", season: "Winter 2026", score: 0, cover: gradients[5], episodes: 24, dubbed: false, studios: "MAPPA", format: "TV", genres: "Action, Supernatural", status: "Not Yet Aired" },
+  // Chainsaw Man
+  { slug: "chainsaw-man", title: "Chainsaw Man", titleEnglish: "Chainsaw Man", season: "Fall 2022", score: 8.55, cover: gradients[10], episodes: 12, dubbed: true, studios: "MAPPA", format: "TV", genres: "Action, Supernatural", status: "Finished Airing" },
+  { slug: "chainsaw-man-s2", title: "Chainsaw Man Season 2", titleEnglish: "Chainsaw Man Season 2", season: "Fall 2026", score: 0, cover: gradients[10], episodes: 12, dubbed: false, studios: "MAPPA", format: "TV", genres: "Action, Supernatural", status: "Not Yet Aired" },
+  // Spy x Family
+  { slug: "spy-x-family", title: "Spy x Family", titleEnglish: "Spy x Family", season: "Spring 2022", score: 8.50, cover: gradients[6], episodes: 12, dubbed: true, studios: "Wit Studio", format: "TV", genres: "Action, Comedy", status: "Finished Airing" },
+  { slug: "spy-x-family-s2", title: "Spy x Family Season 2", titleEnglish: "Spy x Family Season 2", season: "Fall 2023", score: 8.32, cover: gradients[6], episodes: 12, dubbed: true, studios: "Wit Studio", format: "TV", genres: "Action, Comedy", status: "Finished Airing" },
+  { slug: "spy-x-family-s3", title: "Spy x Family Season 3", titleEnglish: "Spy x Family Season 3", season: "Fall 2025", score: 8.10, cover: gradients[6], episodes: 12, dubbed: true, studios: "Wit Studio", format: "TV", genres: "Action, Comedy", status: "Currently Airing" },
+  // My Hero Academia
+  { slug: "my-hero-academia", title: "Boku no Hero Academia", titleEnglish: "My Hero Academia", season: "Spring 2016", score: 7.95, cover: gradients[4], episodes: 13, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  { slug: "my-hero-academia-s2", title: "Boku no Hero Academia 2", titleEnglish: "My Hero Academia Season 2", season: "Spring 2017", score: 8.00, cover: gradients[4], episodes: 25, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  { slug: "my-hero-academia-s3", title: "Boku no Hero Academia 3", titleEnglish: "My Hero Academia Season 3", season: "Spring 2018", score: 7.85, cover: gradients[4], episodes: 25, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  { slug: "my-hero-academia-s4", title: "Boku no Hero Academia 4", titleEnglish: "My Hero Academia Season 4", season: "Fall 2019", score: 7.65, cover: gradients[4], episodes: 25, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  { slug: "my-hero-academia-s5", title: "Boku no Hero Academia 5", titleEnglish: "My Hero Academia Season 5", season: "Spring 2021", score: 7.40, cover: gradients[4], episodes: 25, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  { slug: "my-hero-academia-s6", title: "Boku no Hero Academia 6", titleEnglish: "My Hero Academia Season 6", season: "Fall 2022", score: 7.95, cover: gradients[4], episodes: 25, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  { slug: "my-hero-academia-s7", title: "Boku no Hero Academia 7", titleEnglish: "My Hero Academia Season 7", season: "Spring 2024", score: 7.55, cover: gradients[4], episodes: 21, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Superhero", status: "Finished Airing" },
+  // One Punch Man
+  { slug: "one-punch-man", title: "One Punch Man", titleEnglish: "One Punch Man", season: "Fall 2015", score: 8.50, cover: gradients[8], episodes: 12, dubbed: true, studios: "Madhouse", format: "TV", genres: "Action, Comedy", status: "Finished Airing" },
+  { slug: "one-punch-man-s2", title: "One Punch Man 2", titleEnglish: "One Punch Man Season 2", season: "Spring 2019", score: 7.10, cover: gradients[8], episodes: 12, dubbed: true, studios: "J.C.Staff", format: "TV", genres: "Action, Comedy", status: "Finished Airing" },
+  { slug: "one-punch-man-s3", title: "One Punch Man 3", titleEnglish: "One Punch Man Season 3", season: "Fall 2025", score: 7.30, cover: gradients[8], episodes: 12, dubbed: false, studios: "J.C.Staff", format: "TV", genres: "Action, Comedy", status: "Currently Airing" },
+  // Re:Zero
+  { slug: "re-zero", title: "Re:Zero kara Hajimeru Isekai Seikatsu", titleEnglish: "Re:Zero - Starting Life in Another World", season: "Spring 2016", score: 8.25, cover: gradients[7], episodes: 25, dubbed: true, studios: "White Fox", format: "TV", genres: "Drama, Fantasy", status: "Finished Airing" },
+  { slug: "re-zero-s2", title: "Re:Zero kara Hajimeru Isekai Seikatsu 2", titleEnglish: "Re:Zero Season 2", season: "Summer 2020", score: 8.30, cover: gradients[7], episodes: 25, dubbed: true, studios: "White Fox", format: "TV", genres: "Drama, Fantasy", status: "Finished Airing" },
+  { slug: "re-zero-s3", title: "Re:Zero kara Hajimeru Isekai Seikatsu 3", titleEnglish: "Re:Zero Season 3", season: "Fall 2024", score: 8.45, cover: gradients[7], episodes: 16, dubbed: true, studios: "White Fox", format: "TV", genres: "Drama, Fantasy", status: "Finished Airing" },
+  // Mob Psycho
+  { slug: "mob-psycho-100", title: "Mob Psycho 100", titleEnglish: "Mob Psycho 100", season: "Summer 2016", score: 8.50, cover: gradients[11], episodes: 12, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Comedy, Supernatural", status: "Finished Airing" },
+  { slug: "mob-psycho-100-ii", title: "Mob Psycho 100 II", titleEnglish: "Mob Psycho 100 II", season: "Winter 2019", score: 8.85, cover: gradients[11], episodes: 13, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Comedy, Supernatural", status: "Finished Airing" },
+  { slug: "mob-psycho-100-iii", title: "Mob Psycho 100 III", titleEnglish: "Mob Psycho 100 III", season: "Fall 2022", score: 8.65, cover: gradients[11], episodes: 12, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Comedy, Supernatural", status: "Finished Airing" },
+];
+
+// Merge other seasons that weren't already in the dataset
+otherSeasons.forEach((s) => {
+  if (!allAnime.find((a) => a.slug === s.slug)) allAnime.push(s);
+});
+
+// Group anime by franchise root (used for "Related Seasons" on AnimePage)
+const franchiseRoot = (slug: string): string => slug
+  .replace(/-(s\d+|season-?\d+|ii+|iv|v|final|mugen|swordsmith|hashira|entertainment)$/i, "")
+  .replace(/-(s\d+|season-?\d+|ii+|iv|v|final|mugen|swordsmith|hashira|entertainment)-.*$/i, "");
+
+export const getRelatedSeasons = (slug: string): AnimeEntry[] => {
+  const root = franchiseRoot(slug);
+  if (!root) return [];
+  return allAnime.filter((a) => a.slug !== slug && franchiseRoot(a.slug) === root);
+};
