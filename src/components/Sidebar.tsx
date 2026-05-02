@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, TrendingUp, Clock, Compass, History as HistoryIcon, Calendar, List, X } from "lucide-react";
+import { Home, TrendingUp, Clock, Compass, History as HistoryIcon, Calendar, List, X, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import ScheduleModal from "@/components/ScheduleModal";
@@ -46,6 +46,12 @@ const Sidebar = () => {
           <Link to="/my-list" className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${isActive("/my-list") ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}>
             <List size={20} />
             <span className="text-[10px]">List</span>
+          </Link>
+        )}
+        {isLoggedIn && (
+          <Link to="/profile" className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${isActive("/profile") ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}>
+            <User size={20} />
+            <span className="text-[10px]">Profile</span>
           </Link>
         )}
       </aside>
