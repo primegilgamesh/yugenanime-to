@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { History as HistoryIcon, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { History as HistoryIcon, Trash2, ArrowLeft, X } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
@@ -20,7 +20,8 @@ const formatDate = (ts: number) => {
 
 const History = () => {
   const { isLoggedIn } = useAuth();
-  const { history, clearHistory } = useList();
+  const { history, clearHistory, removeHistoryItem } = useList();
+  const navigate = useNavigate();
 
   if (!isLoggedIn) {
     return (
@@ -54,6 +55,9 @@ const History = () => {
         <div className="relative px-4 md:px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
+              <button onClick={() => navigate(-1)} className="text-foreground hover:text-primary p-1 -ml-1" aria-label="Back">
+                <ArrowLeft size={18} />
+              </button>
               <HistoryIcon size={18} className="text-primary" />
               <h1 className="text-foreground font-display font-bold text-lg">Watch History</h1>
               <span className="text-muted-foreground text-sm">({history.length})</span>
@@ -72,28 +76,33 @@ const History = () => {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {history.map((h, i) => (
-                <Link
-                  to={`/anime/${h.slug}/watch/${h.episode}`}
-                  key={`${h.slug}-${h.episode}-${i}`}
-                  className="group block bg-card/60 backdrop-blur-sm rounded-md overflow-hidden border border-border hover:border-primary/50 transition-colors"
-                >
-                  <div className={`relative aspect-video bg-gradient-to-br ${h.cover}`}>
-                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
-                    <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
-                      EP {h.episode}
+                <div key={`${h.slug}-${h.episode}-${i}`} className="group relative bg-card/60 backdrop-blur-sm rounded-md overflow-hidden border border-border hover:border-primary/50 transition-colors">
+                  <Link to={`/anime/${h.slug}/watch/${h.episode}`} className="block">
+                    <div className={`relative aspect-video bg-gradient-to-br ${h.cover}`}>
+                      <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                      <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
+                        EP {h.episode}
+                      </div>
+                      <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">24:00</div>
                     </div>
-                    <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">24:00</div>
-                  </div>
-                  <div className="p-2">
-                    <p className="text-foreground text-[11px] font-medium leading-tight truncate group-hover:text-primary transition-colors">
-                      {h.episode} : {h.episodeTitle || `Episode ${h.episode}`}
-                    </p>
-                    <Link to={`/anime/${h.slug}`} onClick={(e) => e.stopPropagation()} className="text-primary text-[10px] hover:underline truncate block">
-                      {h.title}
-                    </Link>
-                    <p className="text-muted-foreground text-[9px] mt-0.5">Watched {formatDate(h.watchedAt)}</p>
-                  </div>
-                </Link>
+                    <div className="p-2">
+                      <p className="text-foreground text-[11px] font-medium leading-tight truncate group-hover:text-primary transition-colors">
+                        {h.episode} : {h.episodeTitle || `Episode ${h.episode}`}
+                      </p>
+                      <Link to={`/anime/${h.slug}`} onClick={(e) => e.stopPropagation()} className="text-primary text-[10px] hover:underline truncate block">
+                        {h.title}
+                      </Link>
+                      <p className="text-muted-foreground text-[9px] mt-0.5">Watched {formatDate(h.watchedAt)}</p>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeHistoryItem(h.slug, h.episode); }}
+                    className="absolute top-1.5 right-1.5 bg-background/80 hover:bg-destructive text-foreground hover:text-destructive-foreground p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    aria-label="Remove"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
               ))}
             </div>
           )}

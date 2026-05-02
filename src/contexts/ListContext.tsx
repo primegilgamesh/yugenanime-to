@@ -40,6 +40,7 @@ interface ListContextType {
   toggleFavorite: (slug: string, title: string, cover: string) => boolean;
   isFavorited: (slug: string) => boolean;
   recordWatch: (slug: string, title: string, cover: string, episode: number, episodeTitle?: string) => void;
+  removeHistoryItem: (slug: string, episode: number) => void;
   clearHistory: () => void;
 }
 
@@ -123,13 +124,21 @@ export const ListProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [histKey, storageKey]);
 
+  const removeHistoryItem = (slug: string, episode: number) => {
+    setHistory((prev) => {
+      const next = prev.filter((h) => !(h.slug === slug && h.episode === episode));
+      if (histKey) localStorage.setItem(histKey, JSON.stringify(next));
+      return next;
+    });
+  };
+
   const clearHistory = () => {
     setHistory([]);
     if (histKey) localStorage.setItem(histKey, "[]");
   };
 
   return (
-    <ListContext.Provider value={{ listItems, favorites, history, addToList, removeFromList, getListCategory, getEpisodesWatched, toggleFavorite, isFavorited, recordWatch, clearHistory }}>
+    <ListContext.Provider value={{ listItems, favorites, history, addToList, removeFromList, getListCategory, getEpisodesWatched, toggleFavorite, isFavorited, recordWatch, removeHistoryItem, clearHistory }}>
       {children}
     </ListContext.Provider>
   );
