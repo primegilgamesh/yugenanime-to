@@ -1822,3 +1822,19 @@ export const otherSeasons: AnimeEntry[] = [
   { slug: "mob-psycho-100-ii", title: "Mob Psycho 100 II", titleEnglish: "Mob Psycho 100 II", season: "Winter 2019", score: 8.85, cover: gradients[11], episodes: 13, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Comedy, Supernatural", status: "Finished Airing" },
   { slug: "mob-psycho-100-iii", title: "Mob Psycho 100 III", titleEnglish: "Mob Psycho 100 III", season: "Fall 2022", score: 8.65, cover: gradients[11], episodes: 12, dubbed: true, studios: "Bones", format: "TV", genres: "Action, Comedy, Supernatural", status: "Finished Airing" },
 ];
+
+// Merge other seasons that weren't already in the dataset
+otherSeasons.forEach((s) => {
+  if (!allAnime.find((a) => a.slug === s.slug)) allAnime.push(s);
+});
+
+// Group anime by franchise root (used for "Related Seasons" on AnimePage)
+const franchiseRoot = (slug: string): string => slug
+  .replace(/-(s\d+|season-?\d+|ii+|iv|v|final|mugen|swordsmith|hashira|entertainment)$/i, "")
+  .replace(/-(s\d+|season-?\d+|ii+|iv|v|final|mugen|swordsmith|hashira|entertainment)-.*$/i, "");
+
+export const getRelatedSeasons = (slug: string): AnimeEntry[] => {
+  const root = franchiseRoot(slug);
+  if (!root) return [];
+  return allAnime.filter((a) => a.slug !== slug && franchiseRoot(a.slug) === root);
+};
