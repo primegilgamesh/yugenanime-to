@@ -1772,7 +1772,6 @@ export const allAnime: AnimeEntry[] = [
   ...mostPopular,
   ...additionalAnime,
   ...seasonalExpansion,
-  ...otherSeasons,
 ].filter((a, i, arr) => arr.findIndex((b) => b.slug === a.slug) === i);
 
 // Additional seasons / franchise entries (sequels, prequels, OVAs of well-known shows)
