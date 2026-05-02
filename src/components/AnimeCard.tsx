@@ -26,7 +26,7 @@ const AnimeCard = ({ slug, title, season, score, gradient, dubbed, variant = "de
       )}
       {/* Dubbed badge */}
       {dubbed && (
-        <div className="absolute bottom-8 left-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
+        <div className="absolute bottom-8 left-1.5 bg-transparent text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
           <Headphones size={10} /> Available in Dub
         </div>
       )}

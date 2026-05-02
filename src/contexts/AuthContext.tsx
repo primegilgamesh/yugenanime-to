@@ -17,16 +17,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AVATARS = [
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Milo",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Luna",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Nova",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Kai",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Aria",
+const AVATAR_SEEDS = [
+  "Felix", "Aneka", "Milo", "Zoe", "Luna", "Nova", "Kai", "Aria",
+  "Sora", "Hikaru", "Yuki", "Rei", "Akira", "Mika", "Ren", "Hana",
+  "Taro", "Sakura", "Riku", "Mei", "Haru", "Kira", "Asuka", "Jin",
+  "Naomi", "Toru", "Yuna", "Kei", "Emi", "Daichi",
 ];
+
+const AVATARS = AVATAR_SEEDS.flatMap((seed) => [
+  `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`,
+  `https://api.dicebear.com/7.x/lorelei/svg?seed=${seed}`,
+]);
 
 export { AVATARS };
 
