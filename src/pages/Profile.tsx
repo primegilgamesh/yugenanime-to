@@ -180,6 +180,7 @@ const Profile = () => {
     }
   };
 
+  const runExport = (format: "xml" | "json") => {
     const all = [
       ...favorites.map((f) => ({ title: f.title, status: "Favorite", episodesWatched: 0 })),
       ...listItems.map((i) => ({
