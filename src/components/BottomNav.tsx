@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, TrendingUp, Clock, Compass, PlusCircle, X, History as HistoryIcon, Calendar, User } from "lucide-react";
+import { Home, TrendingUp, Clock, Compass, PlusCircle, X, History as HistoryIcon, Calendar, UserCircle2, Bookmark } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import ScheduleModal from "@/components/ScheduleModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -38,11 +38,11 @@ const BottomNav = () => {
             {isLoggedIn && (
               <>
                 <Link to="/my-list" onClick={() => setTrayOpen(false)} className="flex items-center gap-3 py-2.5 px-2 rounded-md text-foreground hover:bg-accent transition-colors">
-                  <User size={20} className="text-muted-foreground" />
+                  <Bookmark size={20} className="text-muted-foreground" />
                   <span className="text-sm">My List</span>
                 </Link>
                 <Link to="/profile" onClick={() => setTrayOpen(false)} className="flex items-center gap-3 py-2.5 px-2 rounded-md text-foreground hover:bg-accent transition-colors">
-                  <User size={20} className="text-muted-foreground" />
+                  <UserCircle2 size={20} className="text-muted-foreground" />
                   <span className="text-sm">Profile</span>
                 </Link>
               </>
