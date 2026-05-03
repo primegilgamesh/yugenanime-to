@@ -308,6 +308,14 @@ const Profile = () => {
                   {importProvider !== "anilist" && (
                     <p className="text-muted-foreground text-xs mb-4">{importProvider.toUpperCase()} requires OAuth setup; entries will be merged with your existing list.</p>
                   )}
+                  {importProvider === "mal" && (
+                    <div className="mb-4 bg-card border border-border rounded-lg p-3">
+                      <p className="text-foreground font-semibold text-sm mb-1 flex items-center gap-2"><Upload size={14} /> Upload MAL XML file</p>
+                      <p className="text-muted-foreground text-xs mb-2">Export your animelist.xml from MyAnimeList and upload it here.</p>
+                      <input ref={malFileRef} type="file" accept=".xml,application/xml,text/xml" onChange={handleMalFileImport}
+                        className="block w-full text-xs text-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:opacity-90" />
+                    </div>
+                  )}
                   <label className="text-foreground font-semibold text-sm mb-1 block">{importProvider === "mal" ? "MAL" : importProvider === "anilist" ? "AniList" : "SIMKL"} username</label>
                   <input value={importUsername} onChange={(e) => setImportUsername(e.target.value)}
                     placeholder={`${importProvider === "mal" ? "MyAnimeList" : importProvider === "anilist" ? "AniList" : "SIMKL"} username`}
