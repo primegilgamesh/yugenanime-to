@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, TrendingUp, Clock, Compass, History as HistoryIcon, Calendar, List, X, User } from "lucide-react";
+import { Home, TrendingUp, Clock, Compass, History as HistoryIcon, Calendar, Bookmark, X, UserCircle2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import ScheduleModal from "@/components/ScheduleModal";
@@ -9,32 +9,39 @@ const Sidebar = () => {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const location = useLocation();
 
-  const navItems = [
+  const browseItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: TrendingUp, label: "Trending", href: "/trending" },
     { icon: Clock, label: "Recents", href: "/recents" },
     { icon: Compass, label: "Discover", href: "/discover" },
+  ];
+
+  const activityItems = [
     { icon: HistoryIcon, label: "History", href: "/history" },
   ];
 
   const isActive = (href: string) => href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
 
+  const NavBtn = ({ icon: Icon, label, href }: { icon: typeof Home; label: string; href: string }) => {
+    const active = isActive(href);
+    return (
+      <Link to={href} className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${active ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}>
+        <Icon size={20} />
+        <span className="text-[10px]">{label}</span>
+      </Link>
+    );
+  };
+
+  const Divider = () => <div className="w-8 h-px bg-border my-2" />;
+
   return (
     <>
-      <aside className="fixed left-0 top-0 h-full w-[70px] bg-sidebar-bg flex-col items-center pt-4 z-50 border-r border-border hidden md:flex">
-        {navItems.map(({ icon: Icon, label, href }) => {
-          const active = isActive(href);
-          return (
-            <Link
-              key={label}
-              to={href}
-              className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${active ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}
-            >
-              <Icon size={20} />
-              <span className="text-[10px]">{label}</span>
-            </Link>
-          );
-        })}
+      <aside className="fixed left-0 top-0 h-full w-[70px] bg-sidebar-bg flex-col items-center z-50 border-r border-border hidden md:flex">
+        {/* Spacing before Home */}
+        <div className="h-6" />
+        {browseItems.map((it) => <NavBtn key={it.label} {...it} />)}
+        <Divider />
+        {activityItems.map((it) => <NavBtn key={it.label} {...it} />)}
         <button
           onClick={() => setScheduleOpen((v) => !v)}
           className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${scheduleOpen ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}
@@ -43,20 +50,14 @@ const Sidebar = () => {
           <span className="text-[10px]">Schedule</span>
         </button>
         {isLoggedIn && (
-          <Link to="/my-list" className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${isActive("/my-list") ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}>
-            <List size={20} />
-            <span className="text-[10px]">List</span>
-          </Link>
-        )}
-        {isLoggedIn && (
-          <Link to="/profile" className={`flex flex-col items-center gap-1 py-3 px-2 w-full transition-colors ${isActive("/profile") ? "text-primary bg-sidebar-hover" : "text-foreground hover:bg-sidebar-hover"}`}>
-            <User size={20} />
-            <span className="text-[10px]">Profile</span>
-          </Link>
+          <>
+            <Divider />
+            <NavBtn icon={Bookmark} label="List" href="/my-list" />
+            <NavBtn icon={UserCircle2} label="Profile" href="/profile" />
+          </>
         )}
       </aside>
 
-      {/* Desktop schedule panel attached to sidebar */}
       {scheduleOpen && (
         <>
           <div className="fixed inset-0 z-[45] hidden md:block" onClick={() => setScheduleOpen(false)} />
