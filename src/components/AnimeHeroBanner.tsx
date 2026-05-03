@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Heart, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
 import { useList, ListCategory } from "@/contexts/ListContext";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const listOptions: { id: ListCategory; label: string }[] = [
   { id: "plan-to-watch", label: "Plan to Watch" },
@@ -17,25 +18,12 @@ interface Props {
 }
 
 const AnimeHeroBanner = ({ anime }: Props) => {
-  const [tableOpen, setTableOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const { isLoggedIn } = useAuth();
   const { toggleFavorite, isFavorited, addToList, removeFromList, getListCategory } = useList();
-  const popoverRef = useRef<HTMLDivElement>(null);
 
   const favorited = isFavorited(anime.slug);
   const currentCategory = getListCategory(anime.slug);
-
-  // Close on outside click
-  useEffect(() => {
-    if (!tableOpen) return;
-    const onClick = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
-        setTableOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, [tableOpen]);
 
   const notify = (msg: string, kind: "info" | "muted" = "info") => {
     toast(msg, {
@@ -54,9 +42,12 @@ const AnimeHeroBanner = ({ anime }: Props) => {
     notify(added ? `${anime.title} added to Favorites` : `${anime.title} removed from Favorites`, added ? "info" : "muted");
   };
 
-  const handleAddClick = () => {
-    if (!isLoggedIn) return notify("Please login first to add to list");
-    setTableOpen((v) => !v);
+  const handleAddClick = (e: React.MouseEvent) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      return notify("Please login first to add to list");
+    }
+    setOpen((v) => !v);
   };
 
   const handleToggleCategory = (cat: ListCategory) => {
@@ -67,43 +58,39 @@ const AnimeHeroBanner = ({ anime }: Props) => {
       addToList(anime.slug, anime.title, anime.cover, cat, anime.episodes);
       notify(`${anime.title} added to ${listOptions.find((o) => o.id === cat)?.label}`);
     }
+    setOpen(false);
   };
 
-  const renderListPopover = (size: "sm" | "md") => (
-    tableOpen && (
-      <div
-        ref={popoverRef}
-        className={`absolute top-full left-0 mt-1 bg-card border border-border rounded-md shadow-xl z-30 ${size === "sm" ? "min-w-[180px]" : "min-w-[220px]"}`}
-      >
-        <div className="px-3 py-2 border-b border-border text-foreground text-xs font-semibold">Add to list</div>
-        <table className="w-full">
-          <tbody>
-            {listOptions.map((opt) => {
-              const checked = currentCategory === opt.id;
-              return (
-                <tr
-                  key={opt.id}
-                  onClick={() => handleToggleCategory(opt.id)}
-                  className="cursor-pointer hover:bg-secondary transition-colors"
-                >
-                  <td className="px-3 py-2 w-6">
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center ${checked ? "bg-primary border-primary" : "border-muted-foreground"}`}>
-                      {checked && <Check size={12} className="text-primary-foreground" />}
-                    </div>
-                  </td>
-                  <td className={`py-2 pr-3 text-sm ${checked ? "text-primary font-semibold" : "text-foreground"}`}>{opt.label}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    )
+  const ListPopoverContent = (
+    <PopoverContent align="start" className="w-56 p-0 bg-card border-border">
+      <div className="px-3 py-2 border-b border-border text-foreground text-xs font-semibold">Add to list</div>
+      <table className="w-full">
+        <tbody>
+          {listOptions.map((opt) => {
+            const checked = currentCategory === opt.id;
+            return (
+              <tr
+                key={opt.id}
+                onClick={() => handleToggleCategory(opt.id)}
+                className="cursor-pointer hover:bg-secondary transition-colors"
+              >
+                <td className="px-3 py-2 w-6">
+                  <div className={`w-4 h-4 rounded border flex items-center justify-center ${checked ? "bg-primary border-primary" : "border-muted-foreground"}`}>
+                    {checked && <Check size={12} className="text-primary-foreground" />}
+                  </div>
+                </td>
+                <td className={`py-2 pr-3 text-sm ${checked ? "text-primary font-semibold" : "text-foreground"}`}>{opt.label}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </PopoverContent>
   );
 
   return (
-    <div className="relative w-full overflow-hidden">
-      <div className="relative w-full h-[180px] md:h-[280px]">
+    <div className="relative w-full">
+      <div className="relative w-full h-[180px] md:h-[280px] overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-br ${anime.cover}`} />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
       </div>
@@ -113,13 +100,15 @@ const AnimeHeroBanner = ({ anime }: Props) => {
         <div className="flex items-end gap-3 md:hidden">
           <div className={`w-[100px] h-[140px] rounded-md bg-gradient-to-br ${anime.cover} border-2 border-background shadow-lg flex-shrink-0`} />
           <div className="flex items-center gap-2 mb-2">
-            <div className="relative">
-              <button onClick={handleAddClick} className="bg-primary text-primary-foreground font-semibold text-xs px-4 py-2 rounded-md hover:opacity-90 transition flex items-center gap-1">
-                <Plus size={12} />
-                {currentCategory ? listOptions.find((o) => o.id === currentCategory)?.label : "Add to List"}
-              </button>
-              {renderListPopover("sm")}
-            </div>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <button onClick={handleAddClick} className="bg-primary text-primary-foreground font-semibold text-xs px-4 py-2 rounded-md hover:opacity-90 transition flex items-center gap-1">
+                  <Plus size={12} />
+                  {currentCategory ? listOptions.find((o) => o.id === currentCategory)?.label : "Add to List"}
+                </button>
+              </PopoverTrigger>
+              {ListPopoverContent}
+            </Popover>
             <button onClick={handleFavorite} className={`p-2 rounded-md transition ${favorited ? "bg-heart/20 text-heart" : "bg-muted text-muted-foreground"}`}>
               <Heart size={16} fill={favorited ? "currentColor" : "none"} />
             </button>
@@ -133,13 +122,15 @@ const AnimeHeroBanner = ({ anime }: Props) => {
             <h1 className="font-display text-2xl font-bold mb-2">{anime.title}</h1>
           </div>
           <div className="flex items-center gap-3 mt-3">
-            <div className="relative">
-              <button onClick={handleAddClick} className="bg-primary text-primary-foreground font-semibold text-sm px-5 py-2 rounded-md hover:opacity-90 transition flex items-center gap-1.5">
-                <Plus size={14} />
-                {currentCategory ? listOptions.find((o) => o.id === currentCategory)?.label : "Add to List"}
-              </button>
-              {renderListPopover("md")}
-            </div>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <button onClick={handleAddClick} className="bg-primary text-primary-foreground font-semibold text-sm px-5 py-2 rounded-md hover:opacity-90 transition flex items-center gap-1.5">
+                  <Plus size={14} />
+                  {currentCategory ? listOptions.find((o) => o.id === currentCategory)?.label : "Add to List"}
+                </button>
+              </PopoverTrigger>
+              {ListPopoverContent}
+            </Popover>
             <button onClick={handleFavorite} className={`p-2 rounded-md transition ${favorited ? "bg-heart/20 text-heart" : "bg-muted text-muted-foreground"}`}>
               <Heart size={18} fill={favorited ? "currentColor" : "none"} />
             </button>

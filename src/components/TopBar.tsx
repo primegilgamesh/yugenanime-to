@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, X, User, List, LogOut } from "lucide-react";
+import { Search, X, List, LogOut, Sun, Moon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, AVATARS } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { allAnime } from "@/data/animeData";
 import yugenLogo from "@/assets/yugen-logo.png";
@@ -21,6 +22,7 @@ const TopBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const desktopInputRef = useRef<HTMLInputElement>(null);
   const { user, isLoggedIn, logout, setAvatar } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -164,6 +166,9 @@ const TopBar = () => {
           <div className="flex-1 max-w-md hidden md:block">{searchBar}</div>
           <div className="ml-auto flex items-center gap-3">
             <button className="md:hidden text-muted-foreground hover:text-foreground transition-colors" onClick={() => setSearchOpen(true)}><Search size={18} /></button>
+            <button onClick={toggleTheme} aria-label="Toggle theme" className="text-muted-foreground hover:text-foreground transition-colors">
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <a href="https://discord.gg/lovable-dev" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
               <DiscordIcon />
             </a>

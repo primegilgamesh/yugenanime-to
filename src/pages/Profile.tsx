@@ -146,6 +146,40 @@ const Profile = () => {
     }
   };
 
+  const malFileRef = useRef<HTMLInputElement>(null);
+  const handleMalFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, "application/xml");
+      const animeNodes = Array.from(doc.getElementsByTagName("anime"));
+      if (animeNodes.length === 0) throw new Error("No <anime> entries found");
+      const statusMap: Record<string, "plan-to-watch" | "watching" | "completed" | "dropped"> = {
+        "Plan to Watch": "plan-to-watch", "Watching": "watching",
+        "Completed": "completed", "Dropped": "dropped", "On-Hold": "plan-to-watch",
+      };
+      let imported = 0;
+      animeNodes.forEach((n) => {
+        const title = n.getElementsByTagName("series_title")[0]?.textContent?.trim() || "";
+        const status = n.getElementsByTagName("my_status")[0]?.textContent?.trim() || "";
+        const epsTxt = n.getElementsByTagName("my_watched_episodes")[0]?.textContent;
+        const eps = epsTxt ? parseInt(epsTxt, 10) : undefined;
+        const cat = statusMap[status];
+        if (!title || !cat) return;
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        addToList(slug, title, "from-blue-600 to-purple-700", cat, eps);
+        imported++;
+      });
+      toast(`Imported ${imported} entries from MAL file`, { position: "top-right" });
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Failed to parse MAL file", { position: "top-right" });
+    } finally {
+      if (malFileRef.current) malFileRef.current.value = "";
+    }
+  };
+
   const runExport = (format: "xml" | "json") => {
     const all = [
       ...favorites.map((f) => ({ title: f.title, status: "Favorite", episodesWatched: 0 })),
@@ -273,6 +307,14 @@ const Profile = () => {
                   )}
                   {importProvider !== "anilist" && (
                     <p className="text-muted-foreground text-xs mb-4">{importProvider.toUpperCase()} requires OAuth setup; entries will be merged with your existing list.</p>
+                  )}
+                  {importProvider === "mal" && (
+                    <div className="mb-4 bg-card border border-border rounded-lg p-3">
+                      <p className="text-foreground font-semibold text-sm mb-1 flex items-center gap-2"><Upload size={14} /> Upload MAL XML file</p>
+                      <p className="text-muted-foreground text-xs mb-2">Export your animelist.xml from MyAnimeList and upload it here.</p>
+                      <input ref={malFileRef} type="file" accept=".xml,application/xml,text/xml" onChange={handleMalFileImport}
+                        className="block w-full text-xs text-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:opacity-90" />
+                    </div>
                   )}
                   <label className="text-foreground font-semibold text-sm mb-1 block">{importProvider === "mal" ? "MAL" : importProvider === "anilist" ? "AniList" : "SIMKL"} username</label>
                   <input value={importUsername} onChange={(e) => setImportUsername(e.target.value)}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { allAnime } from "@/data/animeData";
 
@@ -86,19 +87,36 @@ const findAnimeSlug = (title: string): string | null => {
   return match?.slug || null;
 };
 
+const dayOrder = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
 const ScheduleModal = () => {
-  const now = new Date();
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
   const timeStr = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const todayKey = dayOrder[now.getDay()];
+  const todayLabel = now.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+
+  // Reorder schedule so today comes first
+  const ordered = [...schedule].sort((a, b) => {
+    const ai = (dayOrder.indexOf(a.day) - dayOrder.indexOf(todayKey) + 7) % 7;
+    const bi = (dayOrder.indexOf(b.day) - dayOrder.indexOf(todayKey) + 7) % 7;
+    return ai - bi;
+  });
 
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-foreground font-display font-bold text-2xl">{timeStr} <span className="text-muted-foreground text-sm font-normal">GMT-0</span></p>
-        <p className="text-muted-foreground text-sm">Release time is estimated</p>
+        <p className="text-foreground font-display font-bold text-2xl">{timeStr} <span className="text-muted-foreground text-sm font-normal">Local time</span></p>
+        <p className="text-muted-foreground text-sm">{todayLabel} · Release time is estimated</p>
       </div>
-      {schedule.map((day) => (
+      {ordered.map((day) => (
         <div key={day.day}>
-          <h3 className="text-foreground font-bold text-sm mb-2">{day.day}</h3>
+          <h3 className={`font-bold text-sm mb-2 ${day.day === todayKey ? "text-primary" : "text-foreground"}`}>
+            {day.day}{day.day === todayKey ? " · Today" : ""}
+          </h3>
           <div className="space-y-1">
             {day.entries.map((entry, i) => {
               const slug = findAnimeSlug(entry.title);

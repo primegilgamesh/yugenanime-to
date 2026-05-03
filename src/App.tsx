@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ListProvider } from "@/contexts/ListContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import ScrollToTop from "@/components/ScrollToTop";
 import Home from "./pages/Home";
 import AnimePage from "./pages/anime-archive/AnimePage";
 import EpisodePlayerPage from "./pages/anime-archive/EpisodePlayerPage";
@@ -24,31 +26,34 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
-        <ListProvider>
-          <Toaster />
-          <Sonner position="top-right" />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/anime/:slug" element={<AnimePage />} />
-              <Route path="/anime/:slug/watch/:episode" element={<EpisodePlayerPage />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/trending" element={<Trending />} />
-              <Route path="/recents" element={<Recents />} />
-              <Route path="/discover" element={<Discover />} />
-              <Route path="/my-list" element={<MyList />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/new" element={<NewPage />} />
-              <Route path="/popular" element={<PopularPage />} />
-              <Route path="/reviews" element={<ReviewsPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </ListProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ListProvider>
+            <Toaster />
+            <Sonner position="top-right" />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/anime/:slug" element={<AnimePage />} />
+                <Route path="/anime/:slug/watch/:episode" element={<EpisodePlayerPage />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/trending" element={<Trending />} />
+                <Route path="/recents" element={<Recents />} />
+                <Route path="/discover" element={<Discover />} />
+                <Route path="/my-list" element={<MyList />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/new" element={<NewPage />} />
+                <Route path="/popular" element={<PopularPage />} />
+                <Route path="/reviews" element={<ReviewsPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </ListProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
