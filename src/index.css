@@ -51,6 +51,41 @@
     --score-star: 45 100% 55%;
     --heart: 340 80% 55%;
   }
+
+  .light {
+    --background: 210 25% 97%;
+    --foreground: 220 25% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+
+    --primary: 142 55% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 92%;
+    --secondary-foreground: 220 25% 18%;
+
+    --muted: 210 20% 90%;
+    --muted-foreground: 220 10% 40%;
+
+    --accent: 142 55% 38%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 85%;
+    --input: 210 20% 88%;
+    --ring: 142 55% 38%;
+
+    --sidebar-bg: 210 25% 95%;
+    --sidebar-fg: 220 15% 35%;
+    --sidebar-active: 142 55% 38%;
+    --sidebar-hover: 210 20% 88%;
+  }
 }
 
 @layer base {
