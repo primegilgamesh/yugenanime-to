@@ -146,7 +146,40 @@ const Profile = () => {
     }
   };
 
-  const runExport = (format: "xml" | "json") => {
+  const malFileRef = useRef<HTMLInputElement>(null);
+  const handleMalFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, "application/xml");
+      const animeNodes = Array.from(doc.getElementsByTagName("anime"));
+      if (animeNodes.length === 0) throw new Error("No <anime> entries found");
+      const statusMap: Record<string, "plan-to-watch" | "watching" | "completed" | "dropped"> = {
+        "Plan to Watch": "plan-to-watch", "Watching": "watching",
+        "Completed": "completed", "Dropped": "dropped", "On-Hold": "plan-to-watch",
+      };
+      let imported = 0;
+      animeNodes.forEach((n) => {
+        const title = n.getElementsByTagName("series_title")[0]?.textContent?.trim() || "";
+        const status = n.getElementsByTagName("my_status")[0]?.textContent?.trim() || "";
+        const epsTxt = n.getElementsByTagName("my_watched_episodes")[0]?.textContent;
+        const eps = epsTxt ? parseInt(epsTxt, 10) : undefined;
+        const cat = statusMap[status];
+        if (!title || !cat) return;
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        addToList(slug, title, "from-blue-600 to-purple-700", cat, eps);
+        imported++;
+      });
+      toast(`Imported ${imported} entries from MAL file`, { position: "top-right" });
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Failed to parse MAL file", { position: "top-right" });
+    } finally {
+      if (malFileRef.current) malFileRef.current.value = "";
+    }
+  };
+
     const all = [
       ...favorites.map((f) => ({ title: f.title, status: "Favorite", episodesWatched: 0 })),
       ...listItems.map((i) => ({
