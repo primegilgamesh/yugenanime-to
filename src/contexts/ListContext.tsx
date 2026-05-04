@@ -11,6 +11,18 @@ interface ListItem {
   addedAt: number;
   episodesWatched?: number;
   totalEpisodes?: number;
+  score?: number;
+  startDate?: string;
+  finishDate?: string;
+}
+
+export interface ListEntryUpdate {
+  category: ListCategory;
+  episodesWatched?: number;
+  score?: number;
+  startDate?: string;
+  finishDate?: string;
+  totalEpisodes?: number;
 }
 
 interface FavoriteItem {
