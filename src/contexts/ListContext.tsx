@@ -105,6 +105,26 @@ export const ListProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const upsertListEntry: ListContextType["upsertListEntry"] = (slug, title, cover, update) => {
+    setListItems((prev) => {
+      const existing = prev.find((i) => i.slug === slug);
+      const filtered = prev.filter((i) => i.slug !== slug);
+      const next = [...filtered, {
+        slug, title, cover,
+        category: update.category,
+        addedAt: existing?.addedAt || Date.now(),
+        episodesWatched: update.episodesWatched ?? existing?.episodesWatched ?? 0,
+        totalEpisodes: update.totalEpisodes ?? existing?.totalEpisodes,
+        score: update.score ?? existing?.score,
+        startDate: update.startDate ?? existing?.startDate,
+        finishDate: update.finishDate ?? existing?.finishDate,
+      }];
+      if (storageKey) localStorage.setItem(storageKey, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const getListEntry = (slug: string) => listItems.find((i) => i.slug === slug) || null;
   const getListCategory = (slug: string): ListCategory | null => listItems.find((i) => i.slug === slug)?.category || null;
   const getEpisodesWatched = (slug: string): number => listItems.find((i) => i.slug === slug)?.episodesWatched || 0;
 
