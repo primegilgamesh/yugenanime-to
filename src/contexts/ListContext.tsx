@@ -172,7 +172,7 @@ export const ListProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ListContext.Provider value={{ listItems, favorites, history, addToList, removeFromList, getListCategory, getEpisodesWatched, toggleFavorite, isFavorited, recordWatch, removeHistoryItem, clearHistory }}>
+    <ListContext.Provider value={{ listItems, favorites, history, addToList, upsertListEntry, getListEntry, removeFromList, getListCategory, getEpisodesWatched, toggleFavorite, isFavorited, recordWatch, removeHistoryItem, clearHistory }}>
       {children}
     </ListContext.Provider>
   );
