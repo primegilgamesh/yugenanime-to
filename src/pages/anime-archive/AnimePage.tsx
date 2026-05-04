@@ -74,44 +74,24 @@ const AnimePage = () => {
                 <TrailerSection trailerUrl={anime.trailerUrl} />
                 {(() => {
                   const related = getRelatedSeasons(anime.slug);
-                  // Similar by shared genre, excluding self & related
-                  const myGenres = (anime.genres || "").split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
-                  const similar = allAnime
-                    .filter((a) => a.slug !== anime.slug && !related.find((r) => r.slug === a.slug))
-                    .map((a) => {
-                      const ag = (a.genres || "").split(",").map((g) => g.trim().toLowerCase());
-                      const overlap = ag.filter((g) => myGenres.includes(g)).length;
-                      return { a, overlap };
-                    })
-                    .filter((x) => x.overlap > 0)
-                    .sort((x, y) => y.overlap - x.overlap || (y.a.score || 0) - (x.a.score || 0))
-                    .slice(0, 8)
-                    .map((x) => x.a);
-
-                  const Section = ({ title, items }: { title: string; items: typeof allAnime }) => (
+                  if (related.length === 0) return null;
+                  return (
                     <div className="space-y-3">
-                      <h3 className="text-foreground font-display font-semibold text-base">{title}</h3>
+                      <h3 className="text-foreground font-display font-semibold text-base">Related Seasons & Movies</h3>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {items.map((r) => (
+                        {related.map((r) => (
                           <Link to={`/anime/${r.slug}`} key={r.slug} className="group block">
                             <div className={`relative aspect-[3/4] rounded-md bg-gradient-to-br ${r.cover} overflow-hidden`}>
                               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
                               <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
                                 <p className="text-foreground text-xs font-semibold truncate">{r.title}</p>
-                                <p className="text-muted-foreground text-[10px]">{r.season}</p>
+                                <p className="text-muted-foreground text-[10px]">{r.format || "TV"} · {r.season}</p>
                               </div>
                             </div>
                           </Link>
                         ))}
                       </div>
                     </div>
-                  );
-
-                  return (
-                    <>
-                      {related.length > 0 && <Section title="Related Seasons" items={related} />}
-                      {similar.length > 0 && <Section title="Related Anime" items={similar} />}
-                    </>
                   );
                 })()}
                 <StatusDistribution />
