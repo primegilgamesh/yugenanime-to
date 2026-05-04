@@ -9,9 +9,12 @@ const Sidebar = () => {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const location = useLocation();
 
-  const browseItems = [
+  const topItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: TrendingUp, label: "Trending", href: "/trending" },
+  ];
+
+  const browseItems = [
     { icon: Clock, label: "Recents", href: "/recents" },
     { icon: Compass, label: "Discover", href: "/discover" },
   ];
@@ -37,8 +40,8 @@ const Sidebar = () => {
   return (
     <>
       <aside className="fixed left-0 top-0 h-full w-[70px] bg-sidebar-bg flex-col items-center z-50 border-r border-border hidden md:flex">
-        {/* Spacing before Home */}
-        <div className="h-6" />
+        {topItems.map((it) => <NavBtn key={it.label} {...it} />)}
+        <Divider />
         {browseItems.map((it) => <NavBtn key={it.label} {...it} />)}
         <Divider />
         {activityItems.map((it) => <NavBtn key={it.label} {...it} />)}
