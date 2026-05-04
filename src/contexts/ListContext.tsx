@@ -46,6 +46,8 @@ interface ListContextType {
   favorites: FavoriteItem[];
   history: HistoryItem[];
   addToList: (slug: string, title: string, cover: string, category: ListCategory, totalEpisodes?: number) => void;
+  upsertListEntry: (slug: string, title: string, cover: string, update: ListEntryUpdate) => void;
+  getListEntry: (slug: string) => ListItem | null;
   removeFromList: (slug: string) => void;
   getListCategory: (slug: string) => ListCategory | null;
   getEpisodesWatched: (slug: string) => number;
