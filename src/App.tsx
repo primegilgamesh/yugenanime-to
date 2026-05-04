@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ListProvider } from "@/contexts/ListContext";
 import { ReviewsProvider } from "@/contexts/ReviewsContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import "@/data/scheduleData"; // ensures schedule merges into allAnime so pages auto-generate
 import ScrollToTop from "@/components/ScrollToTop";
 import Home from "./pages/Home";
 import AnimePage from "./pages/anime-archive/AnimePage";
