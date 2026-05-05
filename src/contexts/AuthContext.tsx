@@ -96,13 +96,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const users: StoredUser[] = JSON.parse(localStorage.getItem("yugen_users") || "[]");
     if (users.find((u) => u.email === email)) return { success: false, error: "An account with this email already exists" };
-    if (users.find((u) => u.username === username)) return { success: false, error: "This username is already taken" };
+    if (users.find((u) => u.username.toLowerCase() === username.toLowerCase())) return { success: false, error: "This username is already taken" };
 
-    const newUser: StoredUser = { username, email, password, avatar: AVATARS[0] };
+    // Pick a unique default avatar per user (cycle through library)
+    const usedAvatars = new Set(users.map((u) => u.avatar));
+    const defaultAvatar = AVATARS.find((a) => !usedAvatars.has(a)) || AVATARS[users.length % AVATARS.length];
+    const newUser: StoredUser = { username, email, password, avatar: defaultAvatar };
     users.push(newUser);
     localStorage.setItem("yugen_users", JSON.stringify(users));
 
-    const userData: User = { username, email, avatar: AVATARS[0] };
+    const userData: User = { username, email, avatar: defaultAvatar };
     setUser(userData);
     localStorage.setItem("yugen_current_user", JSON.stringify(userData));
     return { success: true };
