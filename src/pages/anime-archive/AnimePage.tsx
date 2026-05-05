@@ -94,7 +94,7 @@ const AnimePage = () => {
                     </div>
                   );
                 })()}
-                <StatusDistribution />
+                <StatusDistribution slug={anime.slug} />
               </>
             )}
             {activeTab === "Watch" && (
