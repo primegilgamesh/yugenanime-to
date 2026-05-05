@@ -118,7 +118,7 @@ const MyList = () => {
                           removeFromList(item.slug);
                         }
                       }}
-                      className="absolute top-1.5 right-1.5 bg-background/80 hover:bg-destructive text-foreground hover:text-destructive-foreground p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      className="absolute top-1.5 right-1.5 bg-background/80 hover:bg-destructive text-foreground hover:text-destructive-foreground p-1 rounded-full transition-opacity z-10"
                       aria-label="Remove"
                     >
                       <X size={12} />

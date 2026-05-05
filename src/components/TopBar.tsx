@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, X, List, LogOut, Sun, Moon } from "lucide-react";
+import { Search, X, LogOut, Sun, Moon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, AVATARS } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -89,9 +89,6 @@ const TopBar = () => {
               <p className="text-muted-foreground text-[10px]">{user?.email}</p>
             </div>
           </div>
-          <Link to="/my-list" onClick={() => setProfileOpen(false)} className="w-full flex items-center gap-2 px-3 py-2.5 text-foreground text-sm hover:bg-secondary transition-colors">
-            <List size={14} /> List
-          </Link>
           <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2.5 text-destructive text-sm hover:bg-secondary transition-colors">
             <LogOut size={14} /> Logout
           </button>

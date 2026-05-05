@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef, TouchEvent } from "react";
 import { Link } from "react-router-dom";
-import { Clock, TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Headphones, ThumbsUp } from "lucide-react";
+import { TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Headphones, ThumbsUp } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
 import SectionHeader from "@/components/SectionHeader";
 import {
   heroPicks,
-  recentlyReleased,
   trendingAiring,
   editorsPick,
   underratedSeries,
@@ -17,7 +16,6 @@ import {
   allAnime,
 } from "@/data/animeData";
 
-const tabs = ["All", "SUB", "CHINESE"] as const;
 
 const reviews = [
   { anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "MadSlime", quote: "when will this be out i kinda want to watch it so bad its hurting my last brain cell, c'mon guys release it already, i cannnot", time: "about 6 hours ago", likes: 0, gradient: 2 },
@@ -35,7 +33,7 @@ const heroSlides = [
 ].slice(0, 7);
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState<string>("All");
+  
   const [currentSlide, setCurrentSlide] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -162,49 +160,6 @@ const Home = () => {
         </div>
 
         <div className="px-4 md:px-6 py-4 space-y-8">
-          {/* Recently Released - 5 per row */}
-          <section>
-            <SectionHeader icon={Clock} title="Recently Released" href="/recents" />
-            <div className="flex gap-2 mb-3">
-              {tabs.map((tab) => (
-                <button key={tab} onClick={() => setActiveTab(tab)} className={`text-[11px] font-semibold px-3 py-1 rounded-md transition-colors ${activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
-                  {tab}
-                </button>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {recentlyReleased
-                .filter((anime) => {
-                  if (activeTab === "All") return true;
-                  if (activeTab === "SUB") return !anime.dubbed;
-                  if (activeTab === "CHINESE") return anime.titleNative && /[\u4e00-\u9fff]/.test(anime.titleNative) && !anime.titleNative.match(/[\u3040-\u309f\u30a0-\u30ff]/);
-                  return true;
-                })
-                .slice(0, 10)
-                .map((anime, i) => (
-                <Link to={`/anime/${anime.slug}/watch/${anime.episodes || 1}`} key={anime.slug} className="group block">
-                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(i)} aspect-video`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">
-                      EP {anime.episodes}
-                    </div>
-                    {anime.dubbed && (
-                      <div className="absolute top-1.5 right-1.5 bg-card/80 text-foreground text-[9px] flex items-center gap-0.5 px-1.5 py-0.5 rounded">
-                        <Headphones size={10} /> Available in Dub
-                      </div>
-                    )}
-                    <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">24:00</div>
-                  </div>
-                  <div className="mt-1.5">
-                    <p className="text-foreground text-[11px] font-medium leading-tight group-hover:text-primary transition-colors">{i + 1} · {anime.title}</p>
-                    <p className="text-muted-foreground text-[9px] mt-0.5">{anime.season} · {anime.episodes} Episodes</p>
-                    <p className="text-muted-foreground text-[9px]">{anime.views} · {anime.timeAgo}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-
           {/* Trending Airing - 6 per row */}
           <section>
             <SectionHeader icon={TrendingUp} title="Trending Airing Series" iconColor="text-primary" href="/trending" />

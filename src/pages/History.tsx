@@ -75,7 +75,7 @@ const History = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {history.map((h, i) => (
+              {[...history].sort((a, b) => b.watchedAt - a.watchedAt).map((h, i) => (
                 <div key={`${h.slug}-${h.episode}-${i}`} className="group relative bg-card/60 backdrop-blur-sm rounded-md overflow-hidden border border-border hover:border-primary/50 transition-colors">
                   <Link to={`/anime/${h.slug}/watch/${h.episode}`} className="block">
                     <div className={`relative aspect-video bg-gradient-to-br ${h.cover}`}>

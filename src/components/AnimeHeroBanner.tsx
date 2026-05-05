@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useList, ListCategory } from "@/contexts/ListContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import listBg from "@/assets/list-popup-bg.jpg";
+
 
 const listOptions: { id: ListCategory; label: string }[] = [
   { id: "plan-to-watch", label: "Plan to Watch" },
@@ -22,8 +22,8 @@ interface Props {
 const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 py-3 border-b border-white/10">
-    <label className="text-white/80 text-sm font-medium">{label}</label>
+  <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 py-3 border-b border-border">
+    <label className="text-muted-foreground text-sm font-medium">{label}</label>
     <div>{children}</div>
   </div>
 );
@@ -33,11 +33,11 @@ const SelectBox = ({ value, onChange, children, className = "" }: { value: strin
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="appearance-none bg-black/40 text-white text-sm rounded px-3 py-1.5 pr-8 border border-white/20 hover:border-white/40 focus:outline-none focus:border-primary"
+      className="appearance-none bg-secondary text-foreground text-sm rounded px-3 py-1.5 pr-8 border border-border hover:border-primary/60 focus:outline-none focus:border-primary"
     >
       {children}
     </select>
-    <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-white/60" />
+    <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
   </div>
 );
 
@@ -166,108 +166,90 @@ const AnimeHeroBanner = ({ anime }: Props) => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl p-0 border-none overflow-hidden bg-transparent">
-          <div className="relative">
-            <div className="absolute inset-0 -z-10">
-              <img src={listBg} alt="" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/70" />
-            </div>
-            <div className="p-6 text-white">
-              <DialogHeader>
-                <DialogTitle className="text-white text-lg font-semibold flex items-center gap-2">
-                  Add Anime to My List <span className="text-pink-400 text-xs font-normal">* Your list is public by default.</span>
-                </DialogTitle>
-              </DialogHeader>
+        <DialogContent className="max-w-2xl bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-foreground text-lg font-semibold flex items-center gap-2">
+              Add Anime to My List <span className="text-primary text-xs font-normal">* Your list is public by default.</span>
+            </DialogTitle>
+          </DialogHeader>
 
-              <div className="mt-3">
-                <Field label="Anime Title">
-                  <span className="text-white text-sm">{anime.title}</span>
-                </Field>
+          <div className="mt-1">
+            <Field label="Anime Title">
+              <span className="text-foreground text-sm">{anime.title}</span>
+            </Field>
 
-                <Field label="Status">
-                  <SelectBox value={status} onChange={(v) => setStatus(v as ListCategory)}>
-                    {listOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
-                  </SelectBox>
-                </Field>
+            <Field label="Status">
+              <SelectBox value={status} onChange={(v) => setStatus(v as ListCategory)}>
+                {listOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+              </SelectBox>
+            </Field>
 
-                <Field label="Episodes Watched">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      min={0}
-                      max={totalEpisodes || undefined}
-                      value={epWatched || ""}
-                      onChange={(e) => setEpWatched(Math.max(0, Math.min(totalEpisodes || 9999, Number(e.target.value) || 0)))}
-                      className="w-20 bg-black/40 text-white text-sm rounded px-2 py-1.5 border border-white/20 focus:outline-none focus:border-primary"
-                      placeholder="0"
-                    />
-                    <button onClick={() => setEpWatched((n) => Math.min(totalEpisodes || 9999, n + 1))} className="text-white/70 hover:text-white">+</button>
-                    <span className="text-white/60 text-sm">/ {totalEpisodes || "?"}</span>
-                  </div>
-                </Field>
-
-                <Field label="Your Score">
-                  <SelectBox value={score} onChange={setScore}>
-                    <option value="">Select score</option>
-                    {Array.from({ length: 10 }, (_, i) => 10 - i).map((n) => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </SelectBox>
-                </Field>
-
-                <Field label="Start Date">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <SelectBox value={startD.m} onChange={(v) => setStartD((s) => ({ ...s, m: v }))}>
-                      <option value="">Month</option>
-                      {months.slice(1).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
-                    </SelectBox>
-                    <SelectBox value={startD.d} onChange={(v) => setStartD((s) => ({ ...s, d: v }))}>
-                      <option value="">Day</option>
-                      {Array.from({ length: 31 }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
-                    </SelectBox>
-                    <SelectBox value={startD.y} onChange={(v) => setStartD((s) => ({ ...s, y: v }))}>
-                      <option value="">Year</option>
-                      {Array.from({ length: 40 }, (_, i) => today.getFullYear() - i).map((y) => <option key={y} value={y}>{y}</option>)}
-                    </SelectBox>
-                    <button onClick={() => insertToday(setStartD)} className="text-pink-400 text-xs hover:underline">Insert Today</button>
-                    <label className="flex items-center gap-1 text-xs text-white/70 cursor-pointer">
-                      <input type="checkbox" checked={!startD.m && !startD.d && !startD.y} onChange={() => setStartD({ m: "", d: "", y: "" })} className="accent-primary" />
-                      Unknown Date
-                    </label>
-                  </div>
-                </Field>
-
-                <Field label="Finish Date">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <SelectBox value={finishD.m} onChange={(v) => setFinishD((s) => ({ ...s, m: v }))}>
-                      <option value="">Month</option>
-                      {months.slice(1).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
-                    </SelectBox>
-                    <SelectBox value={finishD.d} onChange={(v) => setFinishD((s) => ({ ...s, d: v }))}>
-                      <option value="">Day</option>
-                      {Array.from({ length: 31 }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
-                    </SelectBox>
-                    <SelectBox value={finishD.y} onChange={(v) => setFinishD((s) => ({ ...s, y: v }))}>
-                      <option value="">Year</option>
-                      {Array.from({ length: 40 }, (_, i) => today.getFullYear() - i).map((y) => <option key={y} value={y}>{y}</option>)}
-                    </SelectBox>
-                    <button onClick={() => insertToday(setFinishD)} className="text-pink-400 text-xs hover:underline">Insert Today</button>
-                    <label className="flex items-center gap-1 text-xs text-white/70 cursor-pointer">
-                      <input type="checkbox" checked={!finishD.m && !finishD.d && !finishD.y} onChange={() => setFinishD({ m: "", d: "", y: "" })} className="accent-primary" />
-                      Unknown Date
-                    </label>
-                  </div>
-                </Field>
-
-                <div className="text-center py-3 text-white/60 text-sm cursor-default">Show Advanced ⌄</div>
-
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  {existing ? (
-                    <Button variant="ghost" onClick={handleRemove} className="text-red-400 hover:text-red-300 hover:bg-red-500/10">Remove from list</Button>
-                  ) : <span />}
-                  <Button onClick={handleSubmit} className="bg-primary text-primary-foreground hover:opacity-90 px-8">Submit</Button>
-                </div>
+            <Field label="Episodes Watched">
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  max={totalEpisodes || undefined}
+                  value={epWatched || ""}
+                  onChange={(e) => setEpWatched(Math.max(0, Math.min(totalEpisodes || 9999, Number(e.target.value) || 0)))}
+                  className="w-20 bg-secondary text-foreground text-sm rounded px-2 py-1.5 border border-border focus:outline-none focus:border-primary"
+                  placeholder="0"
+                />
+                <button onClick={() => setEpWatched((n) => Math.min(totalEpisodes || 9999, n + 1))} className="text-muted-foreground hover:text-foreground">+</button>
+                <span className="text-muted-foreground text-sm">/ {totalEpisodes || "?"}</span>
               </div>
+            </Field>
+
+            <Field label="Your Score">
+              <SelectBox value={score} onChange={setScore}>
+                <option value="">Select score</option>
+                {Array.from({ length: 10 }, (_, i) => 10 - i).map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </SelectBox>
+            </Field>
+
+            <Field label="Start Date">
+              <div className="flex flex-wrap items-center gap-2">
+                <SelectBox value={startD.m} onChange={(v) => setStartD((s) => ({ ...s, m: v }))}>
+                  <option value="">Month</option>
+                  {months.slice(1).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
+                </SelectBox>
+                <SelectBox value={startD.d} onChange={(v) => setStartD((s) => ({ ...s, d: v }))}>
+                  <option value="">Day</option>
+                  {Array.from({ length: 31 }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+                </SelectBox>
+                <SelectBox value={startD.y} onChange={(v) => setStartD((s) => ({ ...s, y: v }))}>
+                  <option value="">Year</option>
+                  {Array.from({ length: 40 }, (_, i) => today.getFullYear() - i).map((y) => <option key={y} value={y}>{y}</option>)}
+                </SelectBox>
+                <button onClick={() => insertToday(setStartD)} className="text-primary text-xs hover:underline">Insert Today</button>
+              </div>
+            </Field>
+
+            <Field label="Finish Date">
+              <div className="flex flex-wrap items-center gap-2">
+                <SelectBox value={finishD.m} onChange={(v) => setFinishD((s) => ({ ...s, m: v }))}>
+                  <option value="">Month</option>
+                  {months.slice(1).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
+                </SelectBox>
+                <SelectBox value={finishD.d} onChange={(v) => setFinishD((s) => ({ ...s, d: v }))}>
+                  <option value="">Day</option>
+                  {Array.from({ length: 31 }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+                </SelectBox>
+                <SelectBox value={finishD.y} onChange={(v) => setFinishD((s) => ({ ...s, y: v }))}>
+                  <option value="">Year</option>
+                  {Array.from({ length: 40 }, (_, i) => today.getFullYear() - i).map((y) => <option key={y} value={y}>{y}</option>)}
+                </SelectBox>
+                <button onClick={() => insertToday(setFinishD)} className="text-primary text-xs hover:underline">Insert Today</button>
+              </div>
+            </Field>
+
+            <div className="flex items-center justify-between gap-2 pt-4">
+              {existing ? (
+                <Button variant="ghost" onClick={handleRemove} className="text-destructive hover:text-destructive hover:bg-destructive/10">Remove from list</Button>
+              ) : <span />}
+              <Button onClick={handleSubmit} className="px-8">Submit</Button>
             </div>
           </div>
         </DialogContent>
