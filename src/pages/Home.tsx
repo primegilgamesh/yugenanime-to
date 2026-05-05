@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef, TouchEvent } from "react";
 import { Link } from "react-router-dom";
-import { Clock, TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Headphones, ThumbsUp } from "lucide-react";
+import { TrendingUp, Sparkles, HeartHandshake, Plus, Flame, MessageSquareText, Star, Play, ChevronLeft, ChevronRight, Headphones, ThumbsUp } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
 import SectionHeader from "@/components/SectionHeader";
 import {
   heroPicks,
-  recentlyReleased,
   trendingAiring,
   editorsPick,
   underratedSeries,
@@ -17,7 +16,6 @@ import {
   allAnime,
 } from "@/data/animeData";
 
-const tabs = ["All", "SUB", "CHINESE"] as const;
 
 const reviews = [
   { anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "MadSlime", quote: "when will this be out i kinda want to watch it so bad its hurting my last brain cell, c'mon guys release it already, i cannnot", time: "about 6 hours ago", likes: 0, gradient: 2 },
