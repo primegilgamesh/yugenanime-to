@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, X, List, LogOut, Sun, Moon } from "lucide-react";
+import { Search, X, LogOut, Sun, Moon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, AVATARS } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
