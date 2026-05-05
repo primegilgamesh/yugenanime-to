@@ -33,7 +33,7 @@ const heroSlides = [
 ].slice(0, 7);
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState<string>("All");
+  
   const [currentSlide, setCurrentSlide] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
