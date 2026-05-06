@@ -4,22 +4,10 @@ import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
-import { allAnime, getGradient } from "@/data/animeData";
+import { getGradient } from "@/data/animeData";
+import { recentEpisodes } from "@/data/recentEpisodes";
 
 const ITEMS_PER_PAGE = 25;
-
-// Generate a larger list of recent episodes from all anime
-const recentEpisodes = allAnime
-  .filter((a) => a.episodes && a.episodes > 0)
-  .map((anime, i) => ({
-    slug: anime.slug,
-    title: anime.title,
-    episode: anime.episodes || 1,
-    views: anime.views || `${Math.floor(Math.random() * 5000) + 50} views`,
-    timeAgo: anime.timeAgo || ["about 2 hours ago", "about 5 hours ago", "about 6 hours ago", "about 8 hours ago", "about 9 hours ago", "about 10 hours ago", "about 11 hours ago", "about 12 hours ago", "about 22 hours ago", "about 23 hours ago", "a day ago", "2 days ago"][i % 12],
-    duration: anime.duration?.replace(" per ep", "") || "24:00",
-    gradient: i,
-  }));
 
 const totalPages = Math.ceil(recentEpisodes.length / ITEMS_PER_PAGE);
 
