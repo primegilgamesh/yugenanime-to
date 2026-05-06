@@ -11,10 +11,11 @@ const ITEMS_PER_PAGE = 42;
 const ALL_GENRES = [
   "Action","Adventure","Avant Garde","Boys Love","Cars","Comedy","Dementia","Demons","Drama",
   "Ecchi","Fantasy","Game","Girls Love","Gourmet","Harem","Hentai","Historical","Horror",
-  "Josei","Kids","Magic","Martial Arts","Mecha","Military","Music","Mystery","Parody",
-  "Police","Psychological","Romance","Samurai","School","Sci-Fi","Seinen","Shoujo","Shoujo Ai",
-  "Shounen","Shounen Ai","Slice of Life","Space","Sports","Suspense","Super Power","Supernatural",
-  "Thriller","Vampire","Yaoi","Yuri",
+  "Isekai","Iyashikei","Josei","Kids","Magic","Martial Arts","Mecha","Military","Music","Mystery",
+  "Parody","Police","Psychological","Reverse Harem","Romance","Samurai","School","Sci-Fi","Seinen",
+  "Shoujo","Shoujo Ai","Shounen","Shounen Ai","Slice of Life","Space","Sports","Suspense",
+  "Super Power","Supernatural","Survival","Thriller","Time Travel","Vampire","Workplace",
+  "Yaoi","Yuri","Mahou Shoujo","Post-Apocalyptic","Cyberpunk","Detective","Tragedy",
 ];
 
 const SEASONS = ["Any","Winter","Spring","Summer","Fall"];
