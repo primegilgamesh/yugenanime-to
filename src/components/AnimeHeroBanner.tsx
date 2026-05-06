@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Heart, Plus, ChevronDown } from "lucide-react";
+import { Heart, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
 import { useList, ListCategory } from "@/contexts/ListContext";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 
 const listOptions: { id: ListCategory; label: string }[] = [
@@ -18,28 +17,6 @@ const listOptions: { id: ListCategory; label: string }[] = [
 interface Props {
   anime: AnimeEntry;
 }
-
-const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 py-3 border-b border-border">
-    <label className="text-muted-foreground text-sm font-medium">{label}</label>
-    <div>{children}</div>
-  </div>
-);
-
-const SelectBox = ({ value, onChange, children, className = "" }: { value: string | number; onChange: (v: string) => void; children: React.ReactNode; className?: string }) => (
-  <div className={`relative inline-block ${className}`}>
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="appearance-none bg-secondary text-foreground text-sm rounded px-3 py-1.5 pr-8 border border-border hover:border-primary/60 focus:outline-none focus:border-primary"
-    >
-      {children}
-    </select>
-    <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
-  </div>
-);
 
 const AnimeHeroBanner = ({ anime }: Props) => {
   const [open, setOpen] = useState(false);
