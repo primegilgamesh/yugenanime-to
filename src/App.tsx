@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ListProvider } from "@/contexts/ListContext";
 import { ReviewsProvider } from "@/contexts/ReviewsContext";
+import { ReviewLikesProvider } from "@/contexts/ReviewLikesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import "@/data/scheduleData"; // ensures schedule merges into allAnime so pages auto-generate
 import ScrollToTop from "@/components/ScrollToTop";
@@ -32,6 +33,7 @@ const App = () => (
         <AuthProvider>
           <ListProvider>
             <ReviewsProvider>
+              <ReviewLikesProvider>
               <Toaster />
               <Sonner position="top-right" />
               <BrowserRouter>
@@ -54,6 +56,7 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
+              </ReviewLikesProvider>
             </ReviewsProvider>
           </ListProvider>
         </AuthProvider>
