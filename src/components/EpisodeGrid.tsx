@@ -154,7 +154,8 @@ const EpisodeGrid = ({ episodes: episodeCount = 12, title: _title = "Anime", slu
             <div className="text-foreground text-[11px] font-medium group-hover:text-primary transition-colors leading-tight line-clamp-2">
               {ep.num} : {ep.title}
             </div>
-            <div className="text-muted-foreground text-[10px] mt-0.5">
+            <div className="text-status-watching text-[10px] mt-0.5 truncate">{_title}</div>
+            <div className="text-muted-foreground text-[10px]">
               {ep.views} views · {ep.time}
             </div>
           </Link>
