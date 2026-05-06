@@ -5,9 +5,10 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   anime: AnimeEntry;
+  hideReviewButton?: boolean;
 }
 
-const AnimeInfoSidebar = ({ anime }: Props) => {
+const AnimeInfoSidebar = ({ anime, hideReviewButton }: Props) => {
   const { isLoggedIn } = useAuth();
 
   const handleWriteReview = () => {
@@ -59,12 +60,14 @@ const AnimeInfoSidebar = ({ anime }: Props) => {
         <div className="text-primary text-xs font-medium mb-1">External Links</div>
         <div className="text-muted-foreground text-sm">MyAnimeList · AniList · SIMKL</div>
       </div>
-      <button
-        onClick={handleWriteReview}
-        className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
-      >
-        Write a Review
-      </button>
+      {!hideReviewButton && (
+        <button
+          onClick={handleWriteReview}
+          className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
+        >
+          Write a Review
+        </button>
+      )}
     </div>
   );
 };

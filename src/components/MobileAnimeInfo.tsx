@@ -5,9 +5,10 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   anime: AnimeEntry;
+  hideReviewButton?: boolean;
 }
 
-const MobileAnimeInfo = ({ anime }: Props) => {
+const MobileAnimeInfo = ({ anime, hideReviewButton }: Props) => {
   const { isLoggedIn } = useAuth();
 
   const handleWriteReview = () => {
@@ -56,12 +57,14 @@ const MobileAnimeInfo = ({ anime }: Props) => {
           ))}
         </div>
       </div>
-      <button
-        onClick={handleWriteReview}
-        className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
-      >
-        Write a Review
-      </button>
+      {!hideReviewButton && (
+        <button
+          onClick={handleWriteReview}
+          className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
+        >
+          Write a Review
+        </button>
+      )}
     </div>
   );
 };

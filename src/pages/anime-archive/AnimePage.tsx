@@ -54,12 +54,12 @@ const AnimePage = () => {
         <AnimeTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
         <div className="py-4">
-          <MobileAnimeInfo anime={anime} />
+          <MobileAnimeInfo anime={anime} hideReviewButton={activeTab === "Reviews"} />
         </div>
 
         <div className="flex gap-6 md:gap-14 p-4 md:p-6">
           <div className="w-64 flex-shrink-0 hidden md:block">
-            <AnimeInfoSidebar anime={anime} />
+            <AnimeInfoSidebar anime={anime} hideReviewButton={activeTab === "Reviews"} />
           </div>
           <div className="flex-1 min-w-0 space-y-6 md:space-y-8">
             {activeTab === "Overview" && (
