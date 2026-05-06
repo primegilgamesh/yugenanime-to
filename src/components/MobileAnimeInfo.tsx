@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { Star, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
+import { aggregateAnimeStats, averageUserScore } from "@/lib/animeStats";
 
 interface Props {
   anime: AnimeEntry;
@@ -10,6 +12,16 @@ interface Props {
 
 const MobileAnimeInfo = ({ anime, hideReviewButton }: Props) => {
   const { isLoggedIn } = useAuth();
+  const [stats, setStats] = useState(() => aggregateAnimeStats(anime.slug));
+  const [avg, setAvg] = useState<number | null>(() => averageUserScore(anime.slug));
+  useEffect(() => {
+    const update = () => { setStats(aggregateAnimeStats(anime.slug)); setAvg(averageUserScore(anime.slug)); };
+    update();
+    window.addEventListener("storage", update);
+    return () => window.removeEventListener("storage", update);
+  }, [anime.slug]);
+  const totalFavs = (anime.favorites || 0) + stats.favorites;
+  const displayScore = avg != null ? avg : anime.score;
 
   const handleWriteReview = () => {
     if (!isLoggedIn) {
