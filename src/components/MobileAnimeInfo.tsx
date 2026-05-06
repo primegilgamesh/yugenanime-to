@@ -52,11 +52,11 @@ const MobileAnimeInfo = ({ anime, hideReviewButton }: Props) => {
       <div className="flex flex-col gap-2">
         <button className="w-full flex items-center justify-center gap-2 bg-score-star/20 text-score-star font-semibold text-sm py-2.5 rounded-md">
           <Star size={16} fill="currentColor" />
-          {anime.score?.toFixed(2) || "—"} Average Score
+          {displayScore?.toFixed(2) || "—"} Average Score
         </button>
         <button className="w-full flex items-center justify-center gap-2 bg-heart/20 text-heart font-semibold text-sm py-2.5 rounded-md">
           <Heart size={16} fill="currentColor" />
-          {anime.favorites?.toLocaleString() || "—"} Favorites
+          {totalFavs.toLocaleString()} Favorites
         </button>
       </div>
       <div className="overflow-x-auto border-b border-border pb-3">
