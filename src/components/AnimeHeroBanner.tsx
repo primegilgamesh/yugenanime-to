@@ -56,21 +56,13 @@ const AnimeHeroBanner = ({ anime }: Props) => {
     setOpen(true);
   };
 
-  const handleSubmit = () => {
-    const formatDate = (d: { m: string; d: string; y: string }) => {
-      if (!d.m || !d.d || !d.y) return undefined;
-      return `${d.y}-${String(d.m).padStart(2, "0")}-${String(d.d).padStart(2, "0")}`;
-    };
+  const handleSave = (newStatus: ListCategory, newScore: number) => {
     upsertListEntry(anime.slug, anime.title, anime.cover, {
-      category: status,
-      episodesWatched: epWatched,
-      score: score ? Number(score) : undefined,
-      startDate: formatDate(startD),
-      finishDate: formatDate(finishD),
+      category: newStatus,
+      episodesWatched: autoEpisodes,
+      score: newScore || undefined,
       totalEpisodes,
     });
-    notify(`${anime.title} saved to ${listOptions.find((o) => o.id === status)?.label}`);
-    setOpen(false);
   };
 
   const handleRemove = () => {
@@ -78,9 +70,6 @@ const AnimeHeroBanner = ({ anime }: Props) => {
     notify(`${anime.title} removed from your list`, "muted");
     setOpen(false);
   };
-
-  const insertToday = (setter: typeof setStartD) =>
-    setter({ m: String(today.getMonth() + 1), d: String(today.getDate()), y: String(today.getFullYear()) });
 
   const currentLabel = existing ? listOptions.find((o) => o.id === existing.category)?.label : "Add to List";
 
