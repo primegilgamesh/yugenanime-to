@@ -4,16 +4,17 @@ import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import TopBar from "@/components/TopBar";
 import { newOnYugen, mostPopular, allAnime, getGradient, AnimeEntry } from "@/data/animeData";
+import { useReviewLikes } from "@/contexts/ReviewLikesContext";
 
 const reviews = [
-  { anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "MadSlime", quote: "when will this be out i kinda want to watch it so bad its hurting my last brain cell", time: "about 6 hours ago", likes: 0, gradient: 2 },
-  { anime: "Plastic Memories", slug: "plastic-memories", user: "TimmyFlame", quote: "Heartfelt story with interesting takeaways", time: "about 14 hours ago", likes: 0, gradient: 5 },
-  { anime: "Kusuriya no Hitorigoto", slug: "kusuriya-no-hitorigoto", user: "Maya_cato78", quote: "TALENTED SHIKISO LMFAOOOOOOO", time: "a day ago", likes: 7, gradient: 1 },
-  { anime: "Youkoso Jitsuryoku Shijou Shugi no Classroom e 3rd Season", slug: "youkoso-jitsuryoku", user: "Treyennes", quote: "School anime at it's best", time: "a day ago", likes: 3, gradient: 8 },
-  { anime: "Sousou no Frieren", slug: "frieren", user: "AniChiwa", quote: "Best anime in this genre!", time: "a day ago", likes: 0, gradient: 0 },
-  { anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "NightShade587", quote: "Some descriptions, I should be clear, the anime is alright because it currently has no description.", time: "2 days ago", likes: 1, gradient: 3 },
+  { id: "more-rev-1", anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "MadSlime", quote: "when will this be out i kinda want to watch it so bad its hurting my last brain cell", time: "about 6 hours ago", likes: 0, gradient: 2 },
+  { id: "more-rev-2", anime: "Plastic Memories", slug: "plastic-memories", user: "TimmyFlame", quote: "Heartfelt story with interesting takeaways", time: "about 14 hours ago", likes: 0, gradient: 5 },
+  { id: "more-rev-3", anime: "Kusuriya no Hitorigoto", slug: "kusuriya-no-hitorigoto", user: "Maya_cato78", quote: "TALENTED SHIKISO LMFAOOOOOOO", time: "a day ago", likes: 7, gradient: 1 },
+  { id: "more-rev-4", anime: "Youkoso Jitsuryoku Shijou Shugi no Classroom e 3rd Season", slug: "youkoso-jitsuryoku", user: "Treyennes", quote: "School anime at it's best", time: "a day ago", likes: 3, gradient: 8 },
+  { id: "more-rev-5", anime: "Sousou no Frieren", slug: "frieren", user: "AniChiwa", quote: "Best anime in this genre!", time: "a day ago", likes: 0, gradient: 0 },
+  { id: "more-rev-6", anime: "I've Got a Million Skill Points!", slug: "million-skill-points", user: "NightShade587", quote: "Some descriptions, I should be clear, the anime is alright because it currently has no description.", time: "2 days ago", likes: 1, gradient: 3 },
   ...allAnime.slice(0, 30).map((a, i) => ({
-    anime: a.title, slug: a.slug, user: `Reviewer${i + 1}`,
+    id: `more-rev-extra-${i}`, anime: a.title, slug: a.slug, user: `Reviewer${i + 1}`,
     quote: `An incredible take on the genre. ${a.title} truly delivers!`,
     time: `${i + 3} days ago`, likes: Math.floor(Math.random() * 20), gradient: i,
   })),
