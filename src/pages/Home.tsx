@@ -220,23 +220,52 @@ const Home = () => {
             </div>
           </section>
 
+          {/* Recently Released - shares data with /recents */}
+          <section>
+            <SectionHeader icon={Clock} title="Recently Released" iconColor="text-primary" href="/recents" />
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {recentEpisodes.slice(0, 10).map((ep, i) => (
+                <Link to={`/anime/${ep.slug}/watch/${ep.episode}`} key={`${ep.slug}-${i}`} className="group block">
+                  <div className={`relative rounded-md overflow-hidden bg-gradient-to-br ${getGradient(ep.gradient)} aspect-video`}>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                    <div className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded">EP {ep.episode}</div>
+                    <div className="absolute bottom-1 right-1 bg-background/80 text-foreground text-[9px] px-1 py-0.5 rounded">{ep.duration}</div>
+                  </div>
+                  <div className="mt-1.5">
+                    <p className="text-foreground text-[11px] font-medium leading-tight truncate group-hover:text-primary transition-colors">{ep.episode} : {ep.title}</p>
+                    <p className="text-status-watching text-[10px] truncate">{ep.title}</p>
+                    <p className="text-muted-foreground text-[9px]">{ep.views} · {ep.timeAgo}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+
           {/* Recent Reviews - 4 per row desktop */}
           <section>
             <SectionHeader icon={MessageSquareText} title="Recent YugenAnime Reviews" iconColor="text-primary" href="/reviews" />
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-              {reviews.map((review, i) => (
-                <Link to={`/anime/${review.slug}?tab=Reviews`} key={i} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/50 transition-colors">
-                  <div className={`w-full h-28 bg-gradient-to-br ${getGradient(review.gradient)}`} />
-                  <div className="p-3">
-                    <p className="text-primary text-[11px] font-medium group-hover:underline">Review of {review.anime} by {review.user}</p>
-                    <p className="text-secondary-foreground text-xs italic mt-1">"{review.quote}"</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-muted-foreground text-[10px]">{review.time}</span>
-                      <span className="text-muted-foreground text-[10px] flex items-center gap-1"><ThumbsUp size={10} /> {review.likes}</span>
+              {reviews.map((review, i) => {
+                const liked = isLiked(review.id);
+                const count = getCount(review.id, review.likes);
+                return (
+                  <div key={i} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/50 transition-colors">
+                    <Link to={`/anime/${review.slug}?tab=Reviews`}>
+                      <div className={`w-full h-28 bg-gradient-to-br ${getGradient(review.gradient)}`} />
+                    </Link>
+                    <div className="p-3">
+                      <Link to={`/anime/${review.slug}?tab=Reviews`} className="text-primary text-[11px] font-medium group-hover:underline block">Review of {review.anime} by {review.user}</Link>
+                      <p className="text-secondary-foreground text-xs italic mt-1">"{review.quote}"</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-muted-foreground text-[10px]">{review.time}</span>
+                        <button onClick={() => toggleLike(review.id)} className={`text-[10px] flex items-center gap-1 transition ${liked ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
+                          <ThumbsUp size={10} fill={liked ? "currentColor" : "none"} /> {count}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </Link>
-              ))}
+                );
+              })}
             </div>
           </section>
         </div>
