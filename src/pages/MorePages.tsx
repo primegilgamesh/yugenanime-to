@@ -79,7 +79,9 @@ export const PopularPage = () => (
   </div>
 );
 
-export const ReviewsPage = () => (
+export const ReviewsPage = () => {
+  const { isLiked, toggleLike, getCount } = useReviewLikes();
+  return (
   <div className="min-h-screen bg-background pb-14 md:pb-0">
     <Sidebar /><BottomNav />
     <div className="md:ml-[70px]"><TopBar />
@@ -90,21 +92,30 @@ export const ReviewsPage = () => (
           <span className="text-muted-foreground text-sm">({reviews.length})</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {reviews.map((review, i) => (
-            <Link to={`/anime/${review.slug}?tab=Reviews`} key={i} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/50 transition-colors">
-              <div className={`w-full h-28 bg-gradient-to-br ${getGradient(review.gradient)}`} />
-              <div className="p-3">
-                <p className="text-primary text-[11px] font-medium group-hover:underline">Review of {review.anime} by {review.user}</p>
-                <p className="text-secondary-foreground text-xs italic mt-1">"{review.quote}"</p>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-muted-foreground text-[10px]">{review.time}</span>
-                  <span className="text-muted-foreground text-[10px] flex items-center gap-1"><ThumbsUp size={10} /> {review.likes}</span>
+          {reviews.map((review, i) => {
+            const liked = isLiked(review.id);
+            const count = getCount(review.id, review.likes);
+            return (
+              <div key={i} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/50 transition-colors">
+                <Link to={`/anime/${review.slug}?tab=Reviews`}>
+                  <div className={`w-full h-28 bg-gradient-to-br ${getGradient(review.gradient)}`} />
+                </Link>
+                <div className="p-3">
+                  <Link to={`/anime/${review.slug}?tab=Reviews`} className="text-primary text-[11px] font-medium group-hover:underline block">Review of {review.anime} by {review.user}</Link>
+                  <p className="text-secondary-foreground text-xs italic mt-1">"{review.quote}"</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-muted-foreground text-[10px]">{review.time}</span>
+                    <button onClick={() => toggleLike(review.id)} className={`text-[10px] flex items-center gap-1 transition ${liked ? "text-primary" : "text-muted-foreground hover:text-primary"}`}>
+                      <ThumbsUp size={10} fill={liked ? "currentColor" : "none"} /> {count}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
   </div>
-);
+  );
+};
