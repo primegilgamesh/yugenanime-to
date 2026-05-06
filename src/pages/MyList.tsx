@@ -43,8 +43,8 @@ const MyList = () => {
   }
 
   const currentItems = activeTab === "favorites"
-    ? favorites.map((f) => ({ slug: f.slug, title: f.title, cover: f.cover, episodesWatched: 0 }))
-    : listItems.filter((i) => i.category === activeTab).map((i) => ({ slug: i.slug, title: i.title, cover: i.cover, episodesWatched: i.episodesWatched || 0 }));
+    ? [...favorites].sort((a, b) => b.addedAt - a.addedAt).map((f) => ({ slug: f.slug, title: f.title, cover: f.cover, episodesWatched: 0 }))
+    : [...listItems].filter((i) => i.category === activeTab).sort((a, b) => b.addedAt - a.addedAt).map((i) => ({ slug: i.slug, title: i.title, cover: i.cover, episodesWatched: i.episodesWatched || 0 }));
 
   return (
     <div className="min-h-screen bg-background pb-14 md:pb-0 relative">

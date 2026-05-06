@@ -1,14 +1,27 @@
+import { useEffect, useState } from "react";
 import { Star, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
+import { aggregateAnimeStats, averageUserScore } from "@/lib/animeStats";
 
 interface Props {
   anime: AnimeEntry;
+  hideReviewButton?: boolean;
 }
 
-const AnimeInfoSidebar = ({ anime }: Props) => {
+const AnimeInfoSidebar = ({ anime, hideReviewButton }: Props) => {
   const { isLoggedIn } = useAuth();
+  const [stats, setStats] = useState(() => aggregateAnimeStats(anime.slug));
+  const [avg, setAvg] = useState<number | null>(() => averageUserScore(anime.slug));
+  useEffect(() => {
+    const update = () => { setStats(aggregateAnimeStats(anime.slug)); setAvg(averageUserScore(anime.slug)); };
+    update();
+    window.addEventListener("storage", update);
+    return () => window.removeEventListener("storage", update);
+  }, [anime.slug]);
+  const totalFavs = (anime.favorites || 0) + stats.favorites;
+  const displayScore = avg != null ? avg : anime.score;
 
   const handleWriteReview = () => {
     if (!isLoggedIn) {
@@ -40,11 +53,11 @@ const AnimeInfoSidebar = ({ anime }: Props) => {
       {/* Average Score & Favorites as full-width buttons */}
       <div className="w-full bg-muted rounded-md px-4 py-2.5 flex items-center gap-2">
         <Star size={16} className="text-score-star" fill="currentColor" />
-        <span className="text-foreground font-semibold text-sm">{anime.score?.toFixed(2) || "—"} Average Score</span>
+        <span className="text-foreground font-semibold text-sm">{displayScore?.toFixed(2) || "—"} Average Score</span>
       </div>
       <div className="w-full bg-muted rounded-md px-4 py-2.5 flex items-center gap-2">
         <Heart size={16} className="text-heart" fill="currentColor" />
-        <span className="text-foreground text-sm">{anime.favorites?.toLocaleString() || "—"} Favorites</span>
+        <span className="text-foreground text-sm">{totalFavs.toLocaleString()} Favorites</span>
       </div>
 
       <div className="border-t border-border pt-4 space-y-3">
@@ -59,12 +72,14 @@ const AnimeInfoSidebar = ({ anime }: Props) => {
         <div className="text-primary text-xs font-medium mb-1">External Links</div>
         <div className="text-muted-foreground text-sm">MyAnimeList · AniList · SIMKL</div>
       </div>
-      <button
-        onClick={handleWriteReview}
-        className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
-      >
-        Write a Review
-      </button>
+      {!hideReviewButton && (
+        <button
+          onClick={handleWriteReview}
+          className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
+        >
+          Write a Review
+        </button>
+      )}
     </div>
   );
 };

@@ -1,14 +1,27 @@
+import { useEffect, useState } from "react";
 import { Star, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
+import { aggregateAnimeStats, averageUserScore } from "@/lib/animeStats";
 
 interface Props {
   anime: AnimeEntry;
+  hideReviewButton?: boolean;
 }
 
-const MobileAnimeInfo = ({ anime }: Props) => {
+const MobileAnimeInfo = ({ anime, hideReviewButton }: Props) => {
   const { isLoggedIn } = useAuth();
+  const [stats, setStats] = useState(() => aggregateAnimeStats(anime.slug));
+  const [avg, setAvg] = useState<number | null>(() => averageUserScore(anime.slug));
+  useEffect(() => {
+    const update = () => { setStats(aggregateAnimeStats(anime.slug)); setAvg(averageUserScore(anime.slug)); };
+    update();
+    window.addEventListener("storage", update);
+    return () => window.removeEventListener("storage", update);
+  }, [anime.slug]);
+  const totalFavs = (anime.favorites || 0) + stats.favorites;
+  const displayScore = avg != null ? avg : anime.score;
 
   const handleWriteReview = () => {
     if (!isLoggedIn) {
@@ -39,11 +52,11 @@ const MobileAnimeInfo = ({ anime }: Props) => {
       <div className="flex flex-col gap-2">
         <button className="w-full flex items-center justify-center gap-2 bg-score-star/20 text-score-star font-semibold text-sm py-2.5 rounded-md">
           <Star size={16} fill="currentColor" />
-          {anime.score?.toFixed(2) || "—"} Average Score
+          {displayScore?.toFixed(2) || "—"} Average Score
         </button>
         <button className="w-full flex items-center justify-center gap-2 bg-heart/20 text-heart font-semibold text-sm py-2.5 rounded-md">
           <Heart size={16} fill="currentColor" />
-          {anime.favorites?.toLocaleString() || "—"} Favorites
+          {totalFavs.toLocaleString()} Favorites
         </button>
       </div>
       <div className="overflow-x-auto border-b border-border pb-3">
@@ -56,12 +69,14 @@ const MobileAnimeInfo = ({ anime }: Props) => {
           ))}
         </div>
       </div>
-      <button
-        onClick={handleWriteReview}
-        className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
-      >
-        Write a Review
-      </button>
+      {!hideReviewButton && (
+        <button
+          onClick={handleWriteReview}
+          className="w-full bg-primary text-primary-foreground font-semibold text-sm py-2.5 rounded-md hover:opacity-90 transition"
+        >
+          Write a Review
+        </button>
+      )}
     </div>
   );
 };

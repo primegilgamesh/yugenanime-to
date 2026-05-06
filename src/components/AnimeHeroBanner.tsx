@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Heart, Plus, ChevronDown } from "lucide-react";
+import { Heart, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 import { AnimeEntry } from "@/data/animeData";
 import { useAuth } from "@/contexts/AuthContext";
 import { useList, ListCategory } from "@/contexts/ListContext";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 
 const listOptions: { id: ListCategory; label: string }[] = [
@@ -19,61 +18,23 @@ interface Props {
   anime: AnimeEntry;
 }
 
-const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 py-3 border-b border-border">
-    <label className="text-muted-foreground text-sm font-medium">{label}</label>
-    <div>{children}</div>
-  </div>
-);
-
-const SelectBox = ({ value, onChange, children, className = "" }: { value: string | number; onChange: (v: string) => void; children: React.ReactNode; className?: string }) => (
-  <div className={`relative inline-block ${className}`}>
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="appearance-none bg-secondary text-foreground text-sm rounded px-3 py-1.5 pr-8 border border-border hover:border-primary/60 focus:outline-none focus:border-primary"
-    >
-      {children}
-    </select>
-    <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
-  </div>
-);
-
 const AnimeHeroBanner = ({ anime }: Props) => {
   const [open, setOpen] = useState(false);
   const { isLoggedIn } = useAuth();
-  const { toggleFavorite, isFavorited, upsertListEntry, removeFromList, getListEntry } = useList();
+  const { toggleFavorite, isFavorited, upsertListEntry, removeFromList, getListEntry, getEpisodesWatched } = useList();
 
   const favorited = isFavorited(anime.slug);
   const existing = getListEntry(anime.slug);
   const totalEpisodes = anime.episodes || 0;
+  const autoEpisodes = Math.max(getEpisodesWatched(anime.slug), existing?.episodesWatched || 0);
 
   const [status, setStatus] = useState<ListCategory>(existing?.category || "plan-to-watch");
-  const [epWatched, setEpWatched] = useState<number>(existing?.episodesWatched || 0);
-  const [score, setScore] = useState<string>(existing?.score ? String(existing.score) : "");
-  const today = new Date();
-  const [startD, setStartD] = useState<{ m: string; d: string; y: string }>(() => {
-    if (existing?.startDate) {
-      const [y, m, d] = existing.startDate.split("-");
-      return { m: String(Number(m)), d: String(Number(d)), y };
-    }
-    return { m: "", d: "", y: "" };
-  });
-  const [finishD, setFinishD] = useState<{ m: string; d: string; y: string }>(() => {
-    if (existing?.finishDate) {
-      const [y, m, d] = existing.finishDate.split("-");
-      return { m: String(Number(m)), d: String(Number(d)), y };
-    }
-    return { m: "", d: "", y: "" };
-  });
+  const [score, setScore] = useState<number>(existing?.score || 0);
 
   useEffect(() => {
     if (open) {
       setStatus(existing?.category || "plan-to-watch");
-      setEpWatched(existing?.episodesWatched || 0);
-      setScore(existing?.score ? String(existing.score) : "");
+      setScore(existing?.score || 0);
     }
   }, [open]); // eslint-disable-line
 
@@ -95,21 +56,13 @@ const AnimeHeroBanner = ({ anime }: Props) => {
     setOpen(true);
   };
 
-  const handleSubmit = () => {
-    const formatDate = (d: { m: string; d: string; y: string }) => {
-      if (!d.m || !d.d || !d.y) return undefined;
-      return `${d.y}-${String(d.m).padStart(2, "0")}-${String(d.d).padStart(2, "0")}`;
-    };
+  const handleSave = (newStatus: ListCategory, newScore: number) => {
     upsertListEntry(anime.slug, anime.title, anime.cover, {
-      category: status,
-      episodesWatched: epWatched,
-      score: score ? Number(score) : undefined,
-      startDate: formatDate(startD),
-      finishDate: formatDate(finishD),
+      category: newStatus,
+      episodesWatched: autoEpisodes,
+      score: newScore || undefined,
       totalEpisodes,
     });
-    notify(`${anime.title} saved to ${listOptions.find((o) => o.id === status)?.label}`);
-    setOpen(false);
   };
 
   const handleRemove = () => {
@@ -117,9 +70,6 @@ const AnimeHeroBanner = ({ anime }: Props) => {
     notify(`${anime.title} removed from your list`, "muted");
     setOpen(false);
   };
-
-  const insertToday = (setter: typeof setStartD) =>
-    setter({ m: String(today.getMonth() + 1), d: String(today.getDate()), y: String(today.getFullYear()) });
 
   const currentLabel = existing ? listOptions.find((o) => o.id === existing.category)?.label : "Add to List";
 
@@ -166,91 +116,61 @@ const AnimeHeroBanner = ({ anime }: Props) => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-foreground text-lg font-semibold flex items-center gap-2">
-              Add Anime to My List <span className="text-primary text-xs font-normal">* Your list is public by default.</span>
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="mt-1">
-            <Field label="Anime Title">
-              <span className="text-foreground text-sm">{anime.title}</span>
-            </Field>
-
-            <Field label="Status">
-              <SelectBox value={status} onChange={(v) => setStatus(v as ListCategory)}>
-                {listOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
-              </SelectBox>
-            </Field>
-
-            <Field label="Episodes Watched">
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  min={0}
-                  max={totalEpisodes || undefined}
-                  value={epWatched || ""}
-                  onChange={(e) => setEpWatched(Math.max(0, Math.min(totalEpisodes || 9999, Number(e.target.value) || 0)))}
-                  className="w-20 bg-secondary text-foreground text-sm rounded px-2 py-1.5 border border-border focus:outline-none focus:border-primary"
-                  placeholder="0"
-                />
-                <button onClick={() => setEpWatched((n) => Math.min(totalEpisodes || 9999, n + 1))} className="text-muted-foreground hover:text-foreground">+</button>
-                <span className="text-muted-foreground text-sm">/ {totalEpisodes || "?"}</span>
+        <DialogContent className="max-w-xl bg-card/70 backdrop-blur-xl border-border rounded-md p-0 overflow-hidden">
+          <div className="p-4">
+            <h3 className="text-foreground font-display text-base font-semibold mb-3">Add to My List</h3>
+            <table className="w-full text-sm">
+              <tbody>
+                <tr className="border-b border-border/40">
+                  <td className="py-2 pr-3 text-muted-foreground w-32">Anime</td>
+                  <td className="py-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-10 h-14 rounded bg-gradient-to-br ${anime.cover} flex-shrink-0`} />
+                      <span className="text-foreground font-medium">{anime.title}</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-b border-border/40">
+                  <td className="py-2 pr-3 text-muted-foreground">Status</td>
+                  <td className="py-2">
+                    <select
+                      value={status}
+                      onChange={(e) => { const v = e.target.value as ListCategory; setStatus(v); handleSave(v, score); }}
+                      className="bg-secondary/80 text-foreground text-sm rounded px-3 py-1.5 border border-border focus:outline-none focus:border-primary"
+                    >
+                      {listOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+                    </select>
+                  </td>
+                </tr>
+                <tr className="border-b border-border/40">
+                  <td className="py-2 pr-3 text-muted-foreground">Episodes Watched</td>
+                  <td className="py-2 text-foreground">{autoEpisodes}{totalEpisodes ? ` / ${totalEpisodes}` : ""}</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-3 text-muted-foreground">Score</td>
+                  <td className="py-2">
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => { setScore(n); handleSave(status, n); }}
+                          className={`p-0.5 transition ${n <= score ? "text-score-star" : "text-muted-foreground hover:text-score-star/60"}`}
+                          aria-label={`Score ${n}`}
+                        >
+                          <Star size={16} fill={n <= score ? "currentColor" : "none"} />
+                        </button>
+                      ))}
+                      <span className="ml-2 text-xs text-muted-foreground">{score || "—"}/10</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {existing && (
+              <div className="pt-3 flex justify-end">
+                <button onClick={handleRemove} className="text-destructive text-xs hover:underline">Remove from list</button>
               </div>
-            </Field>
-
-            <Field label="Your Score">
-              <SelectBox value={score} onChange={setScore}>
-                <option value="">Select score</option>
-                {Array.from({ length: 10 }, (_, i) => 10 - i).map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </SelectBox>
-            </Field>
-
-            <Field label="Start Date">
-              <div className="flex flex-wrap items-center gap-2">
-                <SelectBox value={startD.m} onChange={(v) => setStartD((s) => ({ ...s, m: v }))}>
-                  <option value="">Month</option>
-                  {months.slice(1).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
-                </SelectBox>
-                <SelectBox value={startD.d} onChange={(v) => setStartD((s) => ({ ...s, d: v }))}>
-                  <option value="">Day</option>
-                  {Array.from({ length: 31 }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
-                </SelectBox>
-                <SelectBox value={startD.y} onChange={(v) => setStartD((s) => ({ ...s, y: v }))}>
-                  <option value="">Year</option>
-                  {Array.from({ length: 40 }, (_, i) => today.getFullYear() - i).map((y) => <option key={y} value={y}>{y}</option>)}
-                </SelectBox>
-                <button onClick={() => insertToday(setStartD)} className="text-primary text-xs hover:underline">Insert Today</button>
-              </div>
-            </Field>
-
-            <Field label="Finish Date">
-              <div className="flex flex-wrap items-center gap-2">
-                <SelectBox value={finishD.m} onChange={(v) => setFinishD((s) => ({ ...s, m: v }))}>
-                  <option value="">Month</option>
-                  {months.slice(1).map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
-                </SelectBox>
-                <SelectBox value={finishD.d} onChange={(v) => setFinishD((s) => ({ ...s, d: v }))}>
-                  <option value="">Day</option>
-                  {Array.from({ length: 31 }, (_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
-                </SelectBox>
-                <SelectBox value={finishD.y} onChange={(v) => setFinishD((s) => ({ ...s, y: v }))}>
-                  <option value="">Year</option>
-                  {Array.from({ length: 40 }, (_, i) => today.getFullYear() - i).map((y) => <option key={y} value={y}>{y}</option>)}
-                </SelectBox>
-                <button onClick={() => insertToday(setFinishD)} className="text-primary text-xs hover:underline">Insert Today</button>
-              </div>
-            </Field>
-
-            <div className="flex items-center justify-between gap-2 pt-4">
-              {existing ? (
-                <Button variant="ghost" onClick={handleRemove} className="text-destructive hover:text-destructive hover:bg-destructive/10">Remove from list</Button>
-              ) : <span />}
-              <Button onClick={handleSubmit} className="px-8">Submit</Button>
-            </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

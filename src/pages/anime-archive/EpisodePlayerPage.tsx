@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Heart, Play, Rewind, FastForward, Settings, Maximize, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, Play, Rewind, FastForward, Settings, Maximize, ChevronLeft, ChevronRight, LayoutGrid, Lightbulb, Camera, RotateCw, Download, Repeat } from "lucide-react";
 import { toast } from "sonner";
 import TopBar from "@/components/TopBar";
 import BottomNav from "@/components/BottomNav";
@@ -16,6 +16,7 @@ const EpisodePlayerPage = () => {
   const { isLoggedIn } = useAuth();
   const { recordWatch } = useList();
   const [autoNext, setAutoNext] = useState(true);
+  const [audioMode, setAudioMode] = useState<"sub" | "dub">("sub");
 
   const anime = allAnime.find((a) => a.slug === slug);
 
@@ -89,13 +90,21 @@ const EpisodePlayerPage = () => {
               <ChevronLeft size={20} />
             </Link>
           ) : <div className="w-5" />}
-          <div className="flex items-center gap-4 text-muted-foreground">
-            <button className="hover:text-foreground transition text-xs">⊞</button>
-            <button className="hover:text-foreground transition text-xs">💡</button>
-            <button className="hover:text-foreground transition text-xs">📷</button>
-            <button className="hover:text-foreground transition text-xs">↻</button>
-            <button className="hover:text-foreground transition text-xs">⬇</button>
-            <button className="hover:text-foreground transition text-xs">⇄</button>
+          <div className="flex items-center gap-3 text-muted-foreground">
+            {anime.dubbed && (
+              <button
+                onClick={() => setAudioMode((m) => (m === "sub" ? "dub" : "sub"))}
+                className="flex items-center gap-1 bg-primary/15 text-primary text-[11px] font-semibold px-2 py-1 rounded hover:bg-primary/25 transition"
+                aria-label="Toggle sub/dub"
+              >
+                <Repeat size={12} /> {audioMode === "sub" ? "SUB" : "DUB"}
+              </button>
+            )}
+            <button className="hover:text-foreground transition" aria-label="Grid"><LayoutGrid size={14} /></button>
+            <button className="hover:text-foreground transition" aria-label="Lights"><Lightbulb size={14} /></button>
+            <button className="hover:text-foreground transition" aria-label="Screenshot"><Camera size={14} /></button>
+            <button className="hover:text-foreground transition" aria-label="Reload"><RotateCw size={14} /></button>
+            <button className="hover:text-foreground transition" aria-label="Download"><Download size={14} /></button>
           </div>
           {epNum < totalEps ? (
             <Link to={`/anime/${slug}/watch/${epNum + 1}`} className="text-muted-foreground hover:text-foreground transition">
