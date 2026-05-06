@@ -21,36 +21,20 @@ interface Props {
 const AnimeHeroBanner = ({ anime }: Props) => {
   const [open, setOpen] = useState(false);
   const { isLoggedIn } = useAuth();
-  const { toggleFavorite, isFavorited, upsertListEntry, removeFromList, getListEntry } = useList();
+  const { toggleFavorite, isFavorited, upsertListEntry, removeFromList, getListEntry, getEpisodesWatched } = useList();
 
   const favorited = isFavorited(anime.slug);
   const existing = getListEntry(anime.slug);
   const totalEpisodes = anime.episodes || 0;
+  const autoEpisodes = Math.max(getEpisodesWatched(anime.slug), existing?.episodesWatched || 0);
 
   const [status, setStatus] = useState<ListCategory>(existing?.category || "plan-to-watch");
-  const [epWatched, setEpWatched] = useState<number>(existing?.episodesWatched || 0);
-  const [score, setScore] = useState<string>(existing?.score ? String(existing.score) : "");
-  const today = new Date();
-  const [startD, setStartD] = useState<{ m: string; d: string; y: string }>(() => {
-    if (existing?.startDate) {
-      const [y, m, d] = existing.startDate.split("-");
-      return { m: String(Number(m)), d: String(Number(d)), y };
-    }
-    return { m: "", d: "", y: "" };
-  });
-  const [finishD, setFinishD] = useState<{ m: string; d: string; y: string }>(() => {
-    if (existing?.finishDate) {
-      const [y, m, d] = existing.finishDate.split("-");
-      return { m: String(Number(m)), d: String(Number(d)), y };
-    }
-    return { m: "", d: "", y: "" };
-  });
+  const [score, setScore] = useState<number>(existing?.score || 0);
 
   useEffect(() => {
     if (open) {
       setStatus(existing?.category || "plan-to-watch");
-      setEpWatched(existing?.episodesWatched || 0);
-      setScore(existing?.score ? String(existing.score) : "");
+      setScore(existing?.score || 0);
     }
   }, [open]); // eslint-disable-line
 
